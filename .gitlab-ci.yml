@@ -1,0 +1,63 @@
+image: php:7.4
+
+artifacts:
+  stage: artifacts-creation
+  only:
+    changes:
+      - public/**/*
+    refs:
+      - master
+      - develop
+  script:
+    - mkdir -p php74-$CI_COMMIT_REF_NAME
+    - cp -r public php74-$CI_COMMIT_REF_NAME
+  artifacts:
+    paths:
+      - php74-$CI_COMMIT_REF_NAME
+
+artifacts-and-readme-upload:
+  stage: files-upload
+  image: ubuntu
+  only:
+    changes:
+      - public/**/*
+      - "README.md"
+    refs:
+      - master
+      - develop
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq zip
+    - apt-get update -y && apt-get install -yqqf openssh-client git unzip sshpass rsync --fix-missing
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_SCRIPTS_REPO" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $DOMAIN_SCRIPTS_REPO >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - git config --global user.email "gitlabci-$CI_PROJECT_NAME@robotess.net"
+    - git config --global user.name "Gitlab Runner ($CI_PROJECT_NAME)"
+  script:
+    - mkdir -p repo
+    - ls
+    - echo "Pulling external repo into build"
+    - ssh git@$DOMAIN_SCRIPTS_REPO
+    - git clone git@$DOMAIN_SCRIPTS_REPO:$URL_SCRIPTS_REPO repo
+    - ls
+    - awk -v RS='---' -v ORS='---' 'NR==1{print} NR==2{print; printf"\n";exit}' repo/content/projects/$CI_PROJECT_NAME/_index.md >> _index.md
+    - rm repo/content/projects/$CI_PROJECT_NAME/_index.md
+    - mv _index.md repo/content/projects/$CI_PROJECT_NAME/
+    - ls repo/content/projects/$CI_PROJECT_NAME/
+    - sed '1d' README.md >> repo/content/projects/$CI_PROJECT_NAME/_index.md
+    - mkdir -p repo/static/files/$CI_PROJECT_NAME
+    - zip -r php74-$CI_COMMIT_REF_NAME.zip php74-$CI_COMMIT_REF_NAME
+    - cp php74-$CI_COMMIT_REF_NAME.zip repo/static/files/$CI_PROJECT_NAME
+    - cd repo
+    - git add -f static/files/$CI_PROJECT_NAME/*.zip
+    - git commit -m "Uploaded artifacts from http://gitlab.com/$CI_PROJECT_PATH/commit/$CI_COMMIT_SHA" || echo "No changes, nothing to commit!"
+    - git push origin master
+
+stages:
+  - artifacts-creation
+  - files-upload
