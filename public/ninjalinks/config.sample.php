@@ -1,7 +1,10 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -46,7 +49,7 @@ $opt['buttonmaxheight'] = 31; // max height allowed for buttons
 $opt['buttonsize'] = 15360; // max button size in bytes, default is 15KB (15360)
 
 $opt['maxkarma'] = 4; // max karma before link is rejected (recommend 4)
-$opt['required'] = array("email", "linkname", "linkurl", "linkcat"); // required fields - use field name/id from addlink.php
+$opt['required'] = ["email", "linkname", "linkurl", "linkcat"]; // required fields - use field name/id from addlink.php
 
 $opt['cleanupdates'] = 1; // (1 = yes, 0 = no) remove HTML from updates in control panel; disable at your own risk
 

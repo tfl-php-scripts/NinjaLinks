@@ -67,7 +67,7 @@ function nl2p($pee, $br = 1) {
 	$allblocks = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|math|style|script|object|input|param|p|h[1-6])';
 	$pee = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
 	$pee = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
-	$pee = str_replace(array("\r\n", "\r"), "\n", $pee); // cross-platform newlines
+	$pee = str_replace(["\r\n", "\r"], "\n", $pee); // cross-platform newlines
 	$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
 	$pee = preg_replace('/\n?(.+?)(?:\n\s*\n|\z)/s', "<p>$1</p>\n", $pee); // make paragraphs, including one at the end
 	$pee = preg_replace('|<p>\s*?</p>|', '', $pee); // under certain strange conditions it could create a P of entirely whitespace
@@ -106,7 +106,7 @@ function make_excerpt($entry, $excerpt_length, $extension, $cutword = 'false') {
 function checkBots() {
 	$isbot = false;
 
-	$bots = array("Indy", "Blaiz", "Java", "libwww-perl", "Python", "OutfoxBot", "User-Agent", "PycURL", "AlphaServer", "T8Abot", "Syntryx", "WinHttp", "WebBandit", "nicebot", "[en]", "0.6 Beta", "build", "OpenWare", "Opera/9.0 (Windows NT 5.1; U; en)");
+	$bots = ["Indy", "Blaiz", "Java", "libwww-perl", "Python", "OutfoxBot", "User-Agent", "PycURL", "AlphaServer", "T8Abot", "Syntryx", "WinHttp", "WebBandit", "nicebot", "[en]", "0.6 Beta", "build", "OpenWare", "Opera/9.0 (Windows NT 5.1; U; en)"];
 	foreach ($bots as $bot)
 		if (strpos($_SERVER['HTTP_USER_AGENT'], $bot) !== false)
 			$isbot = true;
@@ -117,9 +117,9 @@ function checkBots() {
 	return $isbot;
 }
 function spamCount($input) {
-	$spam = array("beastial", "bestial", "blowjob", "clit", "cum", "cunilingus", "cunillingus", "cunnilingus", "cunt", "ejaculate", "fag", "felatio", "fellatio", "fuck", "fuk", "fuks", "gangbang", "gangbanged", "gangbangs", "hotsex", "jism", "jiz", "orgasim", "orgasims", "orgasm", "orgasms", "phonesex", "phuk", "phuq", "porn", "pussies", "pussy", "spunk", "xxx", "viagra", "phentermine", "tramadol", "adipex", "advai", "alprazolam", "ambien", "ambian", "amoxicillin", "antivert", "blackjack", "backgammon", "texas", "holdem", "poker", "carisoprodol", "ciara", "ciprofloxacin", "debt", "dating", "porn");
+	$spam = ["beastial", "bestial", "blowjob", "clit", "cum", "cunilingus", "cunillingus", "cunnilingus", "cunt", "ejaculate", "fag", "felatio", "fellatio", "fuck", "fuk", "fuks", "gangbang", "gangbanged", "gangbangs", "hotsex", "jism", "jiz", "orgasim", "orgasims", "orgasm", "orgasms", "phonesex", "phuk", "phuq", "porn", "pussies", "pussy", "spunk", "xxx", "viagra", "phentermine", "tramadol", "adipex", "advai", "alprazolam", "ambien", "ambian", "amoxicillin", "antivert", "blackjack", "backgammon", "texas", "holdem", "poker", "carisoprodol", "ciara", "ciprofloxacin", "debt", "dating", "porn"];
 
-	$words = array();
+	$words = [];
 	foreach (preg_split('/[^\w]/', strtolower($input), -1, PREG_SPLIT_NO_EMPTY) as $word)
 		$words[] = $word;
 	
@@ -130,7 +130,7 @@ function spamCount($input) {
 function exploitKarma($input) {
 	$tempKarma = (int)0;
 	
-	$exploits = array("content-type", "bcc:", "cc:", "document.cookie", "onclick", "onload", "javascript");
+	$exploits = ["content-type", "bcc:", "cc:", "document.cookie", "onclick", "onload", "javascript"];
 	foreach ($exploits as $exploit)
 		if (!empty($input) && stripos($input, $exploit) !== false)
 			$tempKarma += 2;
@@ -140,7 +140,7 @@ function exploitKarma($input) {
 function badMailKarma($input) {
 	$tempKarma = (int)0;
 	
-	$badmails = array("mail.ru", "hotsheet.com", "ibizza.com", "aeekart.com", "fooder.com", "yahone.com");
+	$badmails = ["mail.ru", "hotsheet.com", "ibizza.com", "aeekart.com", "fooder.com", "yahone.com"];
 	$domain = array_pop(explode("@", $input));
 	foreach($badmails as $ext)
 		if ($domain == $ext)
@@ -151,7 +151,7 @@ function badMailKarma($input) {
 function isBanned($email) {
 	global $mysql, $opt, $dbpref;
 	
-	$list = array();
+	$list = [];
 	$getbanned = $mysql->query("SELECT * FROM `".$dbpref."banned`");
 	if (mysql_num_rows($getbanned)) {
 		while ($r = mysql_fetch_assoc($getbanned))
@@ -173,8 +173,8 @@ function isBanned($email) {
 function validateButton($button) {
 	global $opt;
 
-	$allowed = array(".jpg", ".gif", ".png");
-	$errors = array();
+	$allowed = [".jpg", ".gif", ".png"];
+	$errors = [];
 
 	if (filesize($button) > $opt['buttonsize'])
 		$error[] = "Button larger than max file size";
@@ -260,13 +260,13 @@ function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected =
 		if you're knowledgeable enough to be reading this far down - forgive me, please!
 	*/
 
-	$cats = array();
+	$cats = [];
 	$meow = $mysql->query("SELECT `catparent`, `catname`, `".$dbpref."categories`.`id` as `catid`, COUNT(`".$dbpref."links`.`id`) AS `linkcount` FROM `".$dbpref."categories` LEFT JOIN `".$dbpref."links` ON `".$dbpref."categories`.`id` = `".$dbpref."links`.`category` GROUP BY `".$dbpref."categories`.`id` ORDER BY `catparent`, `catname`");
 	while($row = mysql_fetch_assoc($meow)) {
 		if ($row['catparent'] == 0)
-			$cats[$row['catid']] = array('name' => $row['catname'], 'subcats' => "", 'linkcount' => $row['linkcount']);
+			$cats[$row['catid']] = ['name' => $row['catname'], 'subcats' => "", 'linkcount' => $row['linkcount']];
 		else
-			$cats[$row['catparent']]['subcats'][$row['catid']] = array('name' => $row['catname']);
+			$cats[$row['catparent']]['subcats'][$row['catid']] = ['name' => $row['catname']];
 	}
 	
 	if ($opt['topdirlinks'] == 0) $disallow = ' disabled="disabled"';

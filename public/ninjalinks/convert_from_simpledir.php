@@ -1,7 +1,10 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -33,7 +36,7 @@ elseif (empty($simple_dbuser) || empty($simple_dbpass) || empty($simple_dbname))
 $simplesql = new mysql($simple_dbhost, $simple_dbuser, $simple_dbpass, $simple_dbname);
 
 $getCats = $simplesql->query("SELECT * FROM `".$simple_cats."`");
-$catQry = array();
+$catQry = [];
 while($c = mysql_fetch_assoc($getCats))
 	$catQry[] = "('".$c['catID']."', '".$c['catname']."')";
 	
@@ -47,7 +50,7 @@ else
 
 
 $getLinks = $simplesql->query("SELECT * FROM `".$simple_links."`");
-$linkQry = array();
+$linkQry = [];
 while($l = mysql_fetch_assoc($getLinks))
 	$linkQry[] = "('".$l['owneremail']."', '".$l['linkname']."', '".$l['linkurl']."', '".$l['linkdesc']."', '".$l['relCatID']."', '".$l['linkstatus']."', '". TODAY ."')";
 	

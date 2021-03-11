@@ -1,7 +1,10 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -9,7 +12,7 @@
 //-----------------------------------------------------------------------------
 
 include('header.php');
-$validtypes = array("ip", "email");
+$validtypes = ["ip", "email"];
 
 switch(getView()) {
 case "delete":
