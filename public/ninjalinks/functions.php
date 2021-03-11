@@ -14,7 +14,7 @@
 
 // IMPORTANT FUNCTIONS -- DO NOT EDIT
 class mysql {
-	function mysql($host, $user, $pass, $dbnm) {
+	function __construct($host, $user, $pass, $dbnm) {
 		$connect = mysql_connect($host, $user, $pass) or doError('no-connect');
 		$select = mysql_select_db($dbnm, $connect) or doError('no-select-db');
 		
