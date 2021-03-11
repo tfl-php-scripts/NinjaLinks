@@ -1,7 +1,10 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -23,13 +26,13 @@ $createLinks = $mysql->query("CREATE TABLE `".$dbpref."links` (
 	`linkbutton` VARCHAR(255) NOT NULL,
 	`linkdesc` TEXT NOT NULL,
 	`linktags` TEXT NOT NULL,
-	`category` int(11) NOT NULL,
+	`category` int(11) NOT NULL default '0',
 	`rating` TINYINT(1) NOT NULL default '0',
 	`approved` TINYINT(1) NOT NULL default '0',
 	`premium` TINYINT(1) NOT NULL default '0',
-	`dateadded` DATETIME NOT NULL,
-	`dateupdated` DATETIME NOT NULL,
-	`hits` int(11) NOT NULL,
+	`dateadded` DATETIME NOT NULL default '1970-01-01',
+	`dateupdated` DATETIME NOT NULL default '1970-01-01',
+	`hits` int(11) NOT NULL default '0',
 	PRIMARY KEY (`id`)
 )");
 if ($createLinks)
@@ -40,9 +43,9 @@ else
 
 $createUpdates = $mysql->query("CREATE TABLE `".$dbpref."updates` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`title` VARCHAR(250) NOT NULL,
+	`title` VARCHAR(250) NOT NULL default '',
 	`entry` TEXT NOT NULL,
-	`datetime` DATETIME NOT NULL,
+	`datetime` DATETIME NOT NULL default '1970-01-01',
 	PRIMARY KEY (`id`)
 )");
 if ($createUpdates)
@@ -53,8 +56,8 @@ else
 
 $createCategories = $mysql->query("CREATE TABLE `".$dbpref."categories` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`catname` VARCHAR(25) NOT NULL,
-	`catparent` INT(11) NOT NULL,
+	`catname` VARCHAR(25) NOT NULL default '',
+	`catparent` INT(11) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`)
 )");
 if ($createCategories) {
@@ -72,8 +75,8 @@ if ($createCategories) {
 
 $createBanned = $mysql->query("CREATE TABLE `".$dbpref."banned` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
-	`type` ENUM('ip', 'email') NOT NULL,
-	`value` VARCHAR(255) NOT NULL,
+	`type` ENUM('ip', 'email') NOT NULL default 'ip',
+	`value` VARCHAR(255) NOT NULL default '',
 	PRIMARY KEY (`id`)
 )");
 if ($createBanned)

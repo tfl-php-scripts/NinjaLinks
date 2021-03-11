@@ -1,7 +1,10 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -258,7 +261,7 @@ function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected =
 	*/
 
 	$cats = array();
-	$meow = $mysql->query("SELECT *, `".$dbpref."categories`.`id` as `catid`, COUNT(`".$dbpref."links`.`id`) AS `linkcount` FROM `".$dbpref."categories` LEFT JOIN `".$dbpref."links` ON `".$dbpref."categories`.`id` = `".$dbpref."links`.`category` GROUP BY `".$dbpref."categories`.`id` ORDER BY `catparent`, `catname`");
+	$meow = $mysql->query("SELECT `catparent`, `catname`, `".$dbpref."categories`.`id` as `catid`, COUNT(`".$dbpref."links`.`id`) AS `linkcount` FROM `".$dbpref."categories` LEFT JOIN `".$dbpref."links` ON `".$dbpref."categories`.`id` = `".$dbpref."links`.`category` GROUP BY `".$dbpref."categories`.`id` ORDER BY `catparent`, `catname`");
 	while($row = mysql_fetch_assoc($meow)) {
 		if ($row['catparent'] == 0)
 			$cats[$row['catid']] = array('name' => $row['catname'], 'subcats' => "", 'linkcount' => $row['linkcount']);
