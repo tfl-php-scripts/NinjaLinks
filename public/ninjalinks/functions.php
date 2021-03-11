@@ -53,6 +53,7 @@ function clean($input, $fordb = 'yes') {
 	return trim($input);
 }
 function escape($input) {
+    //@todo check
 	if (get_magic_quotes_gpc())
 		$input = stripslashes($input);
 
@@ -141,7 +142,8 @@ function badMailKarma($input) {
 	$tempKarma = (int)0;
 	
 	$badmails = ["mail.ru", "hotsheet.com", "ibizza.com", "aeekart.com", "fooder.com", "yahone.com"];
-	$domain = array_pop(explode("@", $input));
+    $expodedArray = explode("@", $input);
+    $domain = array_pop($expodedArray);
 	foreach($badmails as $ext)
 		if ($domain == $ext)
 			$tempKarma += 2;
