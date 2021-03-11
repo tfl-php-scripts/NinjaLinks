@@ -63,4 +63,3 @@ else
 	echo '<p style="color: red;">Links could not be imported - check database settings and try again.</p>';
 
 include('footer.php');
-?>

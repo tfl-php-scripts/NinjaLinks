@@ -14,4 +14,3 @@ if (isset($_GET['link']) && is_numeric($_GET['link'])) {
 } else {
 	exit("Invalid link ID.");
 }
-?>

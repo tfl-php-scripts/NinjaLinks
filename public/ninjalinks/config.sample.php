@@ -55,4 +55,3 @@ $opt['cleanupdates'] = 1; // (1 = yes, 0 = no) remove HTML from updates in contr
 
 // DO NOT REMOVE THIS ....
 require_once('functions.php');
-?>
