@@ -4,6 +4,9 @@ declare(strict_types = 1);
 // NinjaLinks Copyright � Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
 // or LICENSE.txt for more information.
@@ -13,8 +16,9 @@ include('header.php');
 
 switch(getView()) {
 case "delete":
-	if (!isset($_POST['zomgkey']) || $_POST['zomgkey'] != md5($opt['salt'] . date("H")))
-		exit('<p>Invalid token. <a href="manage_updates.php">Try again</a>?</p>');
+	if (!isset($_POST['zomgkey']) || $_POST['zomgkey'] != md5($opt['salt'] . date("H"))) {
+        exit('<p>Invalid token. <a href="manage_updates.php">Try again</a>?</p>');
+    }
 	
 	doDelete("updates", $_POST['del']);
 break;
@@ -22,17 +26,21 @@ case "add":
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
-		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title']))
-			$error = "Title contains invalid characters, please fix and try again.";
-		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['title']))
-			$error = "Title contains invalid characters. Please amend and try again.";
+		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title'])) {
+            $error = "Title contains invalid characters, please fix and try again.";
+        }
+		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['title'])) {
+            $error = "Title contains invalid characters. Please amend and try again.";
+        }
 		
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0)
-					$$key = escape($value);
-				else
-					$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0) {
+                    $$key = escape($value);
+                } else {
+                    $$key = clean($value);
+                }
+            }
 
 			$addUpdate = $mysql->query("INSERT INTO `".$dbpref."updates` (`title`, `entry`, `datetime`) VALUES ('".$title."', '".$entry."', '". TODAY ."')");
 			
@@ -44,8 +52,9 @@ case "add":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 ?>
 	<form action="manage_updates.php?v=add" method="post" id="linkform">
@@ -62,25 +71,30 @@ case "add":
 <?php
 break;
 case "edit":
-	if (!isset($_GET['id']) || !is_numeric($_GET['id']))
-		exit('<p>Invalid category ID</p>');
+	if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        exit('<p>Invalid category ID</p>');
+    }
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
 		// check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-		if ($_POST['updid'] != md5($opt['salt'] . $_GET['id']))
-			exit('<p>Update IDs do not match</p>');
+		if ($_POST['updid'] != md5($opt['salt'] . $_GET['id'])) {
+            exit('<p>Update IDs do not match</p>');
+        }
 		
-		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title']))
-			$error = "Title contains invalid characters, please fix and try again.";
+		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title'])) {
+            $error = "Title contains invalid characters, please fix and try again.";
+        }
 
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0)
-					$$key = escape($value);
-				else
-					$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0) {
+                    $$key = escape($value);
+                } else {
+                    $$key = clean($value);
+                }
+            }
 
 			$editUpdate = $mysql->query("UPDATE `".$dbpref."updates` SET
 				`title` = '".$title."',
@@ -95,22 +109,23 @@ case "edit":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 	$getupdate = $mysql->query("SELECT * FROM `".$dbpref."updates` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
 	if ($mysql->count($getupdate) == 1) {
 		$up = $mysql->fetchAssoc($getupdate);
 ?>
-		<form action="manage_updates.php?v=edit&amp;id=<?php echo $up['id']; ?>" method="post" id="linkform">
+		<form action="manage_updates.php?v=edit&amp;id=<?= $up['id'] ?>" method="post" id="linkform">
 		<fieldset>
-			<input type="hidden" name="updid" id="updid" value="<?php echo md5($opt['salt'] . $up['id']); ?>" />
+			<input type="hidden" name="updid" id="updid" value="<?= md5($opt['salt'] . $up['id']) ?>" />
 
 			<label for="title">Update Title</label>
-			<input type="text" name="title" id="title" value="<?php echo $up['title']; ?>" />
+			<input type="text" name="title" id="title" value="<?= $up['title'] ?>" />
 			
 			<label for="entry">Entry</label>
-			<textarea name="entry" id="entry" rows="10" cols="5"><?php echo $up['entry']; ?></textarea>
+			<textarea name="entry" id="entry" rows="10" cols="5"><?= $up['entry'] ?></textarea>
 
 			<input type="submit" name="submit" class="button" value="Edit Update" />
 		</fieldset>
@@ -132,15 +147,19 @@ default:
 ?>
 	<form action="manage_updates.php?v=delete" method="post">
 	<p>
-		<input type="hidden" name="zomgkey" id="zomgkey" value="<?php echo md5($opt['salt'] . date("H")); ?>" />
+		<input type="hidden" name="zomgkey" id="zomgkey" value="<?= md5($opt['salt'] . date("H")) ?>" />
 	</p>
 	<table>
 	<tr><th>Title</th> <th>Update Snippet</th> <th>Date Added</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
 	while ($u = $mysql->fetchAssoc($adminUpdates)) {
-		if ($rowCount % 2) $rowClass = 'linkeven';
-		else $rowClass = 'linkodd';
+		if ($rowCount % 2) {
+            $rowClass = 'linkeven';
+        }
+		else {
+            $rowClass = 'linkodd';
+        }
 
 		echo '
 			<tr class="'.$rowClass.'"><td>'.$u['title'].'</td> 

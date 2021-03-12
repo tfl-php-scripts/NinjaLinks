@@ -4,6 +4,9 @@ declare(strict_types = 1);
 // NinjaLinks Copyright � Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
+//
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
 // or LICENSE.txt for more information.
@@ -13,48 +16,64 @@ include('header.php');
 
 switch(getView()) {
 case "delete":
-	if (!isset($_POST['smashyhashy']) || $_POST['smashyhashy'] != md5($opt['salt'] . date("H")))
-		exit('<p>Invalid token. <a href="manage_links.php">Try again</a>?</p>');
+	if (!isset($_POST['smashyhashy']) || $_POST['smashyhashy'] != md5($opt['salt'] . date("H"))) {
+        exit('<p>Invalid token. <a href="manage_links.php">Try again</a>?</p>');
+    }
 	
 	doDelete("links", $_POST['del']);
 break;
 case "approve":
 case "edit":
-	if (!isset($_GET['id']) || !is_numeric($_GET['id']))
-		exit('<p>Invalid link ID</p>');
+	if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        exit('<p>Invalid link ID</p>');
+    }
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
 		// check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-		if ($_POST['linkid'] != md5($opt['salt'] . $_GET['id']))
-			exit('<p>Link IDs do not match</p>');
+		if ($_POST['linkid'] != md5($opt['salt'] . $_GET['id'])) {
+            exit('<p>Link IDs do not match</p>');
+        }
 		
-		foreach($_POST as $key => $value)
-			if (in_array($key, $opt['required']) && empty($value))
-				$error = $key.' is a required field.';
+		foreach($_POST as $key => $value) {
+            if (in_array($key, $opt['required']) && empty($value)) {
+                $error = $key . ' is a required field.';
+            }
+        }
 		
-		if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email']))
-			$error = "Invalid E-mail Address, please fix and try again.";
-		elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
-			$error = "Invalid Link URL, please fix and try again.";
-		elseif (!is_numeric($_POST['linkcat']))
-			$error = "Invalid Category, please fix and try again.";
-		elseif (!is_numeric($_POST['approve']))
-			$error = "Invalid 'approve' option, please fix and try again.";
+		if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email'])) {
+            $error = "Invalid E-mail Address, please fix and try again.";
+        }
+		elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl'])) {
+            $error = "Invalid Link URL, please fix and try again.";
+        }
+		elseif (!is_numeric($_POST['linkcat'])) {
+            $error = "Invalid Category, please fix and try again.";
+        }
+		elseif (!is_numeric($_POST['approve'])) {
+            $error = "Invalid 'approve' option, please fix and try again.";
+        }
 			
-		if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton']))
-			$error = "Button URL shouldn't be filled in!";
+		if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton'])) {
+            $error = "Button URL shouldn't be filled in!";
+        }
 		
-		if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc']))
-			$error = "Link Description shouldn't be filled in!";
+		if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc'])) {
+            $error = "Link Description shouldn't be filled in!";
+        }
 
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                $$key = clean($value);
+            }
 
-			if (!isset($linkdesc)) $linkdesc = null;
-			if (!isset($linkbutton)) $linkbutton = null;
+			if (!isset($linkdesc)) {
+                $linkdesc = null;
+            }
+			if (!isset($linkbutton)) {
+                $linkbutton = null;
+            }
 
 			$editLink = $mysql->query("UPDATE `".$dbpref."links` SET
 				`ownername` = '".$ownername."',
@@ -70,13 +89,15 @@ case "edit":
 			WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
 			
 			if ($editLink) {
-				if ($opt['emailuser'] == 1 && ($status == 0 && $approve == 1))
-					doEmail($email, "Link '".html_entity_decode($linkname)."' Approved", $opt['approvalmail']);
+				if ($opt['emailuser'] == 1 && ($status == 0 && $approve == 1)) {
+                    doEmail($email, "Link '" . html_entity_decode($linkname) . "' Approved", $opt['approvalmail']);
+                }
 				
 				echo '<p><b class="red">Note:</b> The link was successfully edited.';
 				
-				if ($status == 0 && (int)$approve == 1)
-					echo ' The link was also <b>approved</b> and will now appear in your directory.';
+				if ($status == 0 && (int)$approve == 1) {
+                    echo ' The link was also <b>approved</b> and will now appear in your directory.';
+                }
 
 				echo ' <a href="manage_links.php">Return to Manage Links</a>.</p>';
 			} else {
@@ -85,44 +106,46 @@ case "edit":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 	$getlink = $mysql->query("SELECT `".$dbpref."links`.*, `".$dbpref."categories`.`catname` FROM `".$dbpref."links` LEFT JOIN `".$dbpref."categories` ON `".$dbpref."links`.`category` = `".$dbpref."categories`.`id` WHERE `".$dbpref."links`.`id` = ".(int)$_GET['id']." LIMIT 1");
 	if ($mysql->count($getlink) === 1) {
 		$link = $mysql->fetchAssoc($getlink);
 ?>
-		<form action="manage_links.php?v=edit&amp;id=<?php echo $link['id']; ?>" method="post" id="linkform">
+		<form action="manage_links.php?v=edit&amp;id=<?= $link['id'] ?>" method="post" id="linkform">
 		<fieldset>
-			<input type="hidden" name="linkid" id="linkid" value="<?php echo md5($opt['salt'] . $link['id']); ?>" />
-			<input type="hidden" name="status" id="status" value="<?php echo $link['approved']; ?>" />
+			<input type="hidden" name="linkid" id="linkid" value="<?= md5($opt['salt'] . $link['id']) ?>" />
+			<input type="hidden" name="status" id="status" value="<?= $link['approved'] ?>" />
 
 			<label for="ownername">Name</label>
-			<input type="text" name="ownername" id="ownername" value="<?php echo $link['ownername']; ?>" />
+			<input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>" />
 			
 			<label for="email">E-mail Address</label>
-			<input type="text" name="email" id="email" value="<?php echo $link['owneremail']; ?>" />
+			<input type="text" name="email" id="email" value="<?= $link['owneremail'] ?>" />
 
 			<label for="linkname">Link Name</label>
-			<input type="text" name="linkname" id="linkname" value="<?php echo $link['linkname']; ?>" />
+			<input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>" />
 
 			<label for="linkurl">Link URL</label>
-			<input type="text" name="linkurl" id="linkurl" value="<?php echo $link['linkurl']; ?>" />
+			<input type="text" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>" />
 
-			<?php if (!empty($link['linkbutton']))
-				echo '<span class="label">Current button</span> <span class="button"><img src="'.$opt['dirlink'].'imgs/'.$link['linkbutton'].'" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>'; ?>
+			<?php if (!empty($link['linkbutton'])) {
+                echo '<span class="label">Current button</span> <span class="button"><img src="' . $opt['dirlink'] . 'imgs/' . $link['linkbutton'] . '" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>';
+            } ?>
 			<?php if ($opt['allowbutton'] == 1) : ?>
 			<label for="linkbutton">Link Button Path</label>
-			<input type="text" name="linkbutton" id="linkbutton" value="<?php echo $link['linkbutton']; ?>" />
+			<input type="text" name="linkbutton" id="linkbutton" value="<?= $link['linkbutton'] ?>" />
 			<?php endif; ?>
 
 			<?php if ($opt['allowdesc'] == 1) : ?>
 			<label for="linkdesc">Link Description</label>
-			<textarea name="linkdesc" id="linkdesc" rows="10" cols="5"><?php echo $link['linkdesc']; ?></textarea>
+			<textarea name="linkdesc" id="linkdesc" rows="10" cols="5"><?= $link['linkdesc'] ?></textarea>
 			<?php endif; ?>
 
 			<label for="linktags">Link Tags</label>
-			<input type="text" name="linktags" id="linktags" value="<?php echo $link['linktags']; ?>" />
+			<input type="text" name="linktags" id="linktags" value="<?= $link['linktags'] ?>" />
 
 			<label for="linkcat">Link Category</label>
 			<select name="linkcat" id="linkcat">
@@ -138,7 +161,7 @@ case "edit":
 				<option value="0">NO</option>
 			</select>
 			<?php else : ?>
-			<input type="hidden" name="approve" id="approve" value="<?php echo $link['approved']; ?>" />
+			<input type="hidden" name="approve" id="approve" value="<?= $link['approved'] ?>" />
 			<?php endif; ?>
 
 			<input type="submit" name="submit" class="button" value="Edit Link" />
@@ -160,16 +183,22 @@ default:
 ?>
 	<form action="manage_links.php?v=delete" method="post">
 	<p>
-		<input type="hidden" name="smashyhashy" id="smashyhashy" value="<?php echo md5($opt['salt'] . date("H")); ?>" />
+		<input type="hidden" name="smashyhashy" id="smashyhashy" value="<?= md5($opt['salt'] . date("H")) ?>" />
 	</p>
 	<table>
 	<tr><th>Link URL</th> <th>Link Name</th> <th>Description</th> <th>Category</th> <th>Date Added</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
 	while ($l = $mysql->fetchAssoc($adminLinks)) {
-		if ($rowCount % 2) $rowClass = 'linkeven';
-		else $rowClass = 'linkodd';
-		if ($l['approved'] == 0) $rowClass = 'pending';
+		if ($rowCount % 2) {
+            $rowClass = 'linkeven';
+        }
+		else {
+            $rowClass = 'linkodd';
+        }
+		if ($l['approved'] == 0) {
+            $rowClass = 'pending';
+        }
 		
 		echo '
 			<tr class="'.$rowClass.'"><td><a href="'.$l['linkurl'].'">'.$l['linkurl'].'</a></td> 
@@ -180,8 +209,9 @@ default:
 			<td class="center">
 		';
 
-		if ($l['approved'] == 0)
-			echo '<a href="manage_links.php?v=approve&amp;id='.$l['id'].'"><img src="../njicons/approve.gif" title="approve this" alt="approve" /></a>';
+		if ($l['approved'] == 0) {
+            echo '<a href="manage_links.php?v=approve&amp;id=' . $l['id'] . '"><img src="../njicons/approve.gif" title="approve this" alt="approve" /></a>';
+        }
 
 		echo '
 				<a href="manage_links.php?v=edit&amp;id='.$l['id'].'"><img src="../njicons/edit.gif" title="edit this" alt="edit" /></a>

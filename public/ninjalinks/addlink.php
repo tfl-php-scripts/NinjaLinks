@@ -21,79 +21,109 @@ include('header.php');
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	$error = NULL;
-	$karma = (int)0;
+	$karma = 0;
 
-	if (checkBots() === true)
-		doError("No bots allowed.");
+	if (checkBots() === true) {
+        doError("No bots allowed.");
+    }
 	
 	foreach($_POST as $key => $value) {
-		if (in_array($key, $opt['required']) && empty($value))
-			$error = $key.' is a required field.';
+		if (in_array($key, $opt['required']) && empty($value)) {
+            $error = $key . ' is a required field.';
+        }
 	
 		$karma += spamCount($value) * 2;
 	}
 	
-	if (isset($_POST['linkdesc']) && !empty($_POST['linkdesc']))
-		$karma += exploitKarma($_POST['linkdesc']);
+	if (isset($_POST['linkdesc']) && !empty($_POST['linkdesc'])) {
+        $karma += exploitKarma($_POST['linkdesc']);
+    }
 	
-	if (isset($_POST['email']) && !empty($_POST['email']))
-		$karma += badMailKarma($_POST['email']);
+	if (isset($_POST['email']) && !empty($_POST['email'])) {
+        $karma += badMailKarma($_POST['email']);
+    }
 			
-	if (!empty($_POST['linkdesc']) && preg_match("/(<.*>)/i", $_POST['linkdesc']))
-		$karma += 2;
-	if (!empty($_POST['ownername']) && strlen($_POST['ownername']) < 3 || strlen($_POST['ownername']) > 15)
-		$karma += 2;
-	if (strlen($_POST['linkurl']) > 30)
-		$karma += 2;
-	if (!empty($_POST['linkdesc']) && substr_count($_POST['linkdesc'], 'http') >= 1)
-		$karma += 2;
-	if (!empty($_POST['linkdesc']) && substr_count($_POST['linkdesc'], 'http') >= 3)
-		$karma += 4;
+	if (!empty($_POST['linkdesc']) && preg_match("/(<.*>)/i", $_POST['linkdesc'])) {
+        $karma += 2;
+    }
+	if (!empty($_POST['ownername']) && strlen($_POST['ownername']) < 3 || strlen($_POST['ownername']) > 15) {
+        $karma += 2;
+    }
+	if (strlen($_POST['linkurl']) > 30) {
+        $karma += 2;
+    }
+	if (!empty($_POST['linkdesc']) && substr_count($_POST['linkdesc'], 'http') >= 1) {
+        $karma += 2;
+    }
+	if (!empty($_POST['linkdesc']) && substr_count($_POST['linkdesc'], 'http') >= 3) {
+        $karma += 4;
+    }
 
 	$_POST['email'] = strtolower($_POST['email']);
 	
-	if (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['ownername']))
-		$error = "Name contains invalid characters. Please fix and try again.";
-	elseif (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email']))
-		$error = "Invalid E-mail Address, please fix and try again.";
-	elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
-		$error = "Invalid Link URL, please fix and try again. Link must start with 'http://' and contain no special characters.";
-	elseif (!is_numeric($_POST['linkcat']))
-		$error = "Invalid Category, please fix and try again. Do not tamper with the form.";
-	elseif (isBanned($_POST['email']) === true)
-		$error = "There was an error whilst trying to add your link to the directory.";
+	if (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['ownername'])) {
+        $error = "Name contains invalid characters. Please fix and try again.";
+    }
+	elseif (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email'])) {
+        $error = "Invalid E-mail Address, please fix and try again.";
+    }
+	elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl'])) {
+        $error = "Invalid Link URL, please fix and try again. Link must start with 'http://' and contain no special characters.";
+    }
+	elseif (!is_numeric($_POST['linkcat'])) {
+        $error = "Invalid Category, please fix and try again. Do not tamper with the form.";
+    }
+	elseif (isBanned($_POST['email']) === true) {
+        $error = "There was an error whilst trying to add your link to the directory.";
+    }
 
-	if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton']))
-		$error = "Button URL shouldn't be filled in! Do not tamper with the form.";
-	elseif ($opt['allowbutton'] == 1 && !empty($_POST['linkbutton']))
-		if (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkbutton']))
-			$error = "Invalid Button URL, please fix and try again. Button URL must start with 'http://' and contain no special characters.";
+	if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton'])) {
+        $error = "Button URL shouldn't be filled in! Do not tamper with the form.";
+    }
+	elseif ($opt['allowbutton'] == 1 && !empty($_POST['linkbutton'])) {
+        if (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i',
+            $_POST['linkbutton'])) {
+            $error = "Invalid Button URL, please fix and try again. Button URL must start with 'http://' and contain no special characters.";
+        }
+    }
 	
-	if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc']))
-		$error = "Link Description shouldn't be filled in! Do not tamper with the form.";
+	if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc'])) {
+        $error = "Link Description shouldn't be filled in! Do not tamper with the form.";
+    }
 		
 	if ($opt['allowdupes'] == 0 && !empty($_POST['linkurl'])) {
 		$findLink = $mysql->query("SELECT * FROM `".$dbpref."links` WHERE `linkurl` LIKE '%".clean($_POST['linkurl'])."%' LIMIT 1");
-		if ($mysql->count($findLink) == 1)
-			$error = "Duplicate link detected - please only add your website once.";
+		if ($mysql->count($findLink) == 1) {
+            $error = "Duplicate link detected - please only add your website once.";
+        }
 	}
 	
-	if ($karma > $opt['maxkarma'])
-		$error = "Your link seems awfully spammy, and has been rejected.";
+	if ($karma > $opt['maxkarma']) {
+        $error = "Your link seems awfully spammy, and has been rejected.";
+    }
 
 	if ($error == NULL) {
-		foreach($_POST as $key => $value) 
-			$$key = clean($value);
+		foreach($_POST as $key => $value) {
+            $$key = clean($value);
+        }
 			
 		if (isset($linkbutton) && !empty($linkbutton)) {
 			$butOutput = getButton($linkbutton);
-			if (is_array($butOutput)) exit(print_r($error));
-			else $linkbutton = basename($butOutput);
+			if (is_array($butOutput)) {
+                exit(print_r($error));
+            }
+			else {
+                $linkbutton = basename($butOutput);
+            }
 		} else {
 			$linkbutton = null;
 		}
-		if (!isset($linkdesc)) $linkdesc = null;
-		if (!isset($linktags)) $linktags = null;
+		if (!isset($linkdesc)) {
+            $linkdesc = null;
+        }
+		if (!isset($linktags)) {
+            $linktags = null;
+        }
 		
 		$addLink = $mysql->query("INSERT INTO `".$dbpref."links` (`ownername`, `owneremail`, `linkname`, `linkurl`, `linkbutton`, `linkdesc`, `linktags`, `category`, `approved`, `dateadded`) VALUES ('".$ownername."', '".$email."', '".$linkname."', '".$linkurl."', '".$linkbutton."', '".$linkdesc."', '".$linktags."', '".(int)$linkcat."', 0, '". TODAY ."')");
 		if ($addLink) {
@@ -125,8 +155,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	}
 }
 
-if (isset($error))
-	echo '<p class="red">'.$error.'</p>';
+if (isset($error)) {
+    echo '<p class="red">' . $error . '</p>';
+}
 ?>
 
 

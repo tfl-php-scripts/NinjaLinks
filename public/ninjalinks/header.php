@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="stylesheet.css" rel="stylesheet" type="text/css" />
 
-<title><?php echo $opt['dirname']; ?></title>
+<title><?= $opt['dirname'] ?></title>
 
 </head>
 <body>
@@ -23,12 +23,13 @@
 <div id="container">
 
 <?php 
-	if (basename($_SERVER['SCRIPT_NAME']) != "install.php")
-		checkInstall(); 
+	if (basename($_SERVER['SCRIPT_NAME']) != "install.php") {
+        checkInstall();
+    }
 ?>
 
 	<ul id="navigation">
-		<li><a href="<?php echo $opt['dirlink']; ?>">Home</a></li>
+		<li><a href="<?= $opt['dirlink'] ?>">Home</a></li>
 		<li><a href="addlink.php">Add Link</a></li>
 		<li><a href="links.php">View Links</a></li>
 		<li><a href="contact.php">Contact</a></li>

@@ -29,38 +29,53 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 					$error = NULL;
 
 					// check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-					if ($_POST['linkid'] != md5($_GET['key'] . $_GET['linkid']))
-						exit('<p>Link IDs do not match</p>');
+					if ($_POST['linkid'] != md5($_GET['key'] . $_GET['linkid'])) {
+                        exit('<p>Link IDs do not match</p>');
+                    }
 					
-					foreach($_POST as $key => $value)
-						if (in_array($key, $opt['required']) && empty($value))
-							$error = $key.' is a required field.';
+					foreach($_POST as $key => $value) {
+                        if (in_array($key, $opt['required']) && empty($value)) {
+                            $error = $key . ' is a required field.';
+                        }
+                    }
 					
-					if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email']))
-						$error = "Invalid E-mail Address, please fix and try again.";
-					elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
-						$error = "Invalid Link URL, please fix and try again.";
-					elseif (!is_numeric($_POST['linkcat']))
-						$error = "Invalid Category, please fix and try again.";
+					if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email'])) {
+                        $error = "Invalid E-mail Address, please fix and try again.";
+                    }
+					elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl'])) {
+                        $error = "Invalid Link URL, please fix and try again.";
+                    }
+					elseif (!is_numeric($_POST['linkcat'])) {
+                        $error = "Invalid Category, please fix and try again.";
+                    }
 						
-					if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton']))
-						$error = "Button URL shouldn't be filled in!";
+					if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton'])) {
+                        $error = "Button URL shouldn't be filled in!";
+                    }
 					
-					if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc']))
-						$error = "Link Description shouldn't be filled in!";
+					if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc'])) {
+                        $error = "Link Description shouldn't be filled in!";
+                    }
 
 					if ($error == NULL) {
-						foreach($_POST as $key => $value)
-							$$key = clean($value);
+						foreach($_POST as $key => $value) {
+                            $$key = clean($value);
+                        }
 
 						if (isset($linkbutton) && !empty($linkbutton)) {
 							$butOutput = getButton($linkbutton);
-							if (is_array($butOutput)) exit(print_r($error));
-							else $linkbutton = basename($butOutput);
+							if (is_array($butOutput)) {
+                                exit(print_r($error));
+                            }
+							else {
+                                $linkbutton = basename($butOutput);
+                            }
 						} else {
 							$linkbutton = null;
 						}
-						if (!isset($linkdesc)) $linkdesc = null;
+						if (!isset($linkdesc)) {
+                            $linkdesc = null;
+                        }
 
 						$editLink = $mysql->query("UPDATE `".$dbpref."links` SET
 							`ownername` = '".$ownername."',
@@ -101,37 +116,38 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 					}
 				}
 ?>
-				<form action="updatelink.php?linkid=<?php echo (int)$_GET['linkid']; ?>&amp;key=<?php echo $_GET['key']; ?>" method="post" id="linkform">
+				<form action="updatelink.php?linkid=<?= (int)$_GET['linkid'] ?>&amp;key=<?= $_GET['key'] ?>" method="post" id="linkform">
 					<fieldset>
-						<input type="hidden" name="linkid" id="linkid" value="<?php echo md5($_GET['key'] . $link['id']); ?>" />
+						<input type="hidden" name="linkid" id="linkid" value="<?= md5($_GET['key'] . $link['id']) ?>" />
 						
 						<label for="ownername">Your Name</label>
-						<input type="text" name="ownername" id="ownername" value="<?php echo $link['ownername']; ?>" />
+						<input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>" />
 						
 						<label for="email">E-mail Address</label>
-						<input type="text" name="email" id="email" value="<?php echo $link['owneremail']; ?>" />
+						<input type="text" name="email" id="email" value="<?= $link['owneremail'] ?>" />
 
 						<label for="linkname">Link Name</label>
-						<input type="text" name="linkname" id="linkname" value="<?php echo $link['linkname']; ?>" />
+						<input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>" />
 
 						<label for="linkurl">Link URL</label>
-						<input type="text" name="linkurl" id="linkurl" value="<?php echo $link['linkurl']; ?>" />
+						<input type="text" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>" />
 
-						<?php if (!empty($link['linkbutton']))
-							echo '<span class="label">Current button</span> <span class="button"><img src="'.$opt['dirlink'].'imgs/'.$link['linkbutton'].'" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>'; ?>
+						<?php if (!empty($link['linkbutton'])) {
+                            echo '<span class="label">Current button</span> <span class="button"><img src="' . $opt['dirlink'] . 'imgs/' . $link['linkbutton'] . '" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>';
+                        } ?>
 						<?php if ($opt['allowbutton'] == 1) : ?>
 						<label for="linkbutton">Link Button</label>
-						<input type="text" name="linkbutton" id="linkbutton" value="<?php echo $link['linkbutton']; ?>" />
+						<input type="text" name="linkbutton" id="linkbutton" value="<?= $link['linkbutton'] ?>" />
 						<?php endif; ?>
 
 						<?php if ($opt['allowdesc'] == 1) : ?>
 						<label for="linkdesc">Link Description</label>
-						<textarea name="linkdesc" id="linkdesc" rows="10" cols="5"><?php echo $link['linkdesc']; ?></textarea>
+						<textarea name="linkdesc" id="linkdesc" rows="10" cols="5"><?= $link['linkdesc'] ?></textarea>
 						<?php endif; ?>
 
 						<?php if (isset($opt['allowtags']) && $opt['allowtags'] == 1) : ?>
 						<label for="linktags">Link Tags</label>
-						<input type="text" name="linktags" id="linktags" value="<?php echo $link['linktags']; ?> />
+						<input type="text" name="linktags" id="linktags" value="<?= $link['linktags'] ?> />
 						<?php endif; ?>
 
 						<label for="linkcat">Link Category</label>
@@ -161,8 +177,9 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 	$error = NULL;
 	checkBots();
 	
-	if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email']))
-		$error = "Invalid E-mail Address, please fix and try again.";
+	if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email'])) {
+        $error = "Invalid E-mail Address, please fix and try again.";
+    }
 	
 	if ($error == null) {
 		$email = clean($_POST['email']);
@@ -182,8 +199,9 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 		echo '<p>Thank you for requesting a link update. If there are any links in the database registered to your e-mail address, you will receive an e-mail with further instructions on how to update each link as required.</p>';
 	}
 }
-if (isset($error))
-	echo '<p class="red">'.$error.'</p>';
+if (isset($error)) {
+    echo '<p class="red">' . $error . '</p>';
+}
 ?>
 
 <form action="updatelink.php?viewsites" method="post" id="linkform">

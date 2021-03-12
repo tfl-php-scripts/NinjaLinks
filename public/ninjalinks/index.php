@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -13,8 +13,8 @@ include('header.php');
 ?>
 
 
-<h1><?php echo $opt['dirname']; ?></h1>
-<p>There are <?php echo getStats("total"); ?> links in the database; <?php echo getStats("approved"); ?> approved and <?php echo getStats("pending"); ?> pending.</p>
+<h1><?= $opt['dirname'] ?></h1>
+<p>There are <?= getStats("total") ?> links in the database; <?= getStats("approved") ?> approved and <?= getStats("pending") ?> pending.</p>
 
 
 <h2>Latest Added Links</h2>

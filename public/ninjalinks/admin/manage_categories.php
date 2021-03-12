@@ -16,8 +16,9 @@ include('header.php');
 
 switch(getView()) {
 case "delete":
-	if (!isset($_POST['lovelyjubbly']) || $_POST['lovelyjubbly'] != md5($opt['salt'] . date("H")))
-		exit('<p>Invalid token. <a href="manage_categories.php">Try again</a>?</p>');
+	if (!isset($_POST['lovelyjubbly']) || $_POST['lovelyjubbly'] != md5($opt['salt'] . date("H"))) {
+        exit('<p>Invalid token. <a href="manage_categories.php">Try again</a>?</p>');
+    }
 	
 	doDelete("categories", $_POST['del']);
 break;
@@ -25,18 +26,23 @@ case "add":
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
-		if (!is_numeric($_POST['catparent']))
-			$error = "Invalid Parent Category, please fix and try again.";
-		elseif (empty($_POST['catname']))
-			$error = "Must enter a Category Name";
-		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['catname']))
-			$error = "Category Name contains invalid characters, please fix and try again.";
-		elseif ($mysql->single("SELECT `id` FROM `".$dbpref."categories` WHERE `catname` = '".clean($_POST['catname'])."' LIMIT 1"))
-			$error = "A category with that name already exists.";
+		if (!is_numeric($_POST['catparent'])) {
+            $error = "Invalid Parent Category, please fix and try again.";
+        }
+		elseif (empty($_POST['catname'])) {
+            $error = "Must enter a Category Name";
+        }
+		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['catname'])) {
+            $error = "Category Name contains invalid characters, please fix and try again.";
+        }
+		elseif ($mysql->single("SELECT `id` FROM `".$dbpref."categories` WHERE `catname` = '".clean($_POST['catname'])."' LIMIT 1")) {
+            $error = "A category with that name already exists.";
+        }
 
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                $$key = clean($value);
+            }
 			
 			$addCat = $mysql->query("INSERT INTO `".$dbpref."categories` (`catname`, `catparent`) VALUES ('".$catname."', '".(int)$catparent."')");
 			
@@ -48,8 +54,9 @@ case "add":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 ?>
 	<form action="manage_categories.php?v=add" method="post" id="linkform">
@@ -71,24 +78,29 @@ case "add":
 <?php
 break;
 case "edit":
-	if (!isset($_GET['id']) || !is_numeric($_GET['id']))
-		exit('<p>Invalid category ID</p>');
+	if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        exit('<p>Invalid category ID</p>');
+    }
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
 		// check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-		if ($_POST['catid'] != md5($opt['salt'] . $_GET['id']))
-			exit('<p>Category IDs do not match</p>');
+		if ($_POST['catid'] != md5($opt['salt'] . $_GET['id'])) {
+            exit('<p>Category IDs do not match</p>');
+        }
 		
-		if (!is_numeric($_POST['catparent']))
-			$error = "Invalid Parent Category, please fix and try again.";
-		elseif (!preg_match("/^[A-Za-z0-9]*$/", $_POST['catname']))
-			$error = "Category Name contains invalid characters, please fix and try again.";
+		if (!is_numeric($_POST['catparent'])) {
+            $error = "Invalid Parent Category, please fix and try again.";
+        }
+		elseif (!preg_match("/^[A-Za-z0-9]*$/", $_POST['catname'])) {
+            $error = "Category Name contains invalid characters, please fix and try again.";
+        }
 		
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                $$key = clean($value);
+            }
 
 			$editCat = $mysql->query("UPDATE `".$dbpref."categories` SET
 				`catname` = '".$catname."',
@@ -105,19 +117,20 @@ case "edit":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 	$getcat = $mysql->query("SELECT * FROM `".$dbpref."categories` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
 	if ($mysql->count($getcat) == 1) {
 		$cat = $mysql->fetchAssoc($getcat);
 ?>
-		<form action="manage_categories.php?v=edit&amp;id=<?php echo $cat['id']; ?>" method="post" id="linkform">
+		<form action="manage_categories.php?v=edit&amp;id=<?= $cat['id'] ?>" method="post" id="linkform">
 		<fieldset>
-			<input type="hidden" name="catid" id="catid" value="<?php echo md5($opt['salt'] . $cat['id']); ?>" />
+			<input type="hidden" name="catid" id="catid" value="<?= md5($opt['salt'] . $cat['id']) ?>" />
 
 			<label for="catname">Category Name</label>
-			<input type="text" name="catname" id="catname" value="<?php echo $cat['catname']; ?>" />
+			<input type="text" name="catname" id="catname" value="<?= $cat['catname'] ?>" />
 			
 			<label for="catparent">Parent Category</label>
 			<select name="catparent" id="catparent">
@@ -147,15 +160,19 @@ default:
 ?>
 	<form action="manage_categories.php?v=delete" method="post">
 	<p>
-		<input type="hidden" name="lovelyjubbly" id="lovelyjubbly" value="<?php echo md5($opt['salt'] . date("H")); ?>" />
+		<input type="hidden" name="lovelyjubbly" id="lovelyjubbly" value="<?= md5($opt['salt'] . date("H")) ?>" />
 	</p>
 	<table>
 	<tr><th>Category</th> <th>Subcategory Of..</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
 	while ($c = $mysql->fetchAssoc($adminCats)) {
-		if ($rowCount % 2) $rowClass = 'linkeven';
-		else $rowClass = 'linkodd';
+		if ($rowCount % 2) {
+            $rowClass = 'linkeven';
+        }
+		else {
+            $rowClass = 'linkodd';
+        }
 	
 		echo '
 			<tr class="'.$rowClass.'"><td>'.$c['catname'].'</td> 

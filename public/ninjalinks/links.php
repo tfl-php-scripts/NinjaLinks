@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@ if (isset($_GET['cat']) && is_numeric($_GET['cat'])) {
 	$getCat = $mysql->single("SELECT `catname` FROM `".$dbpref."categories` WHERE `id` = ".(int)$_GET['cat']." LIMIT 1");
 	if ($getCat) {
 ?>
-		<h1>Viewing Category &raquo; <?php echo $getCat; ?></h1>
+		<h1>Viewing Category &raquo; <?= $getCat ?></h1>
 <?php	
 		$checkLinks = $mysql->single("SELECT COUNT(`id`) FROM `".$dbpref."links` WHERE `category` = ".(int)$_GET['cat']." AND `approved` = 1");
 		if ($checkLinks > 0) {

@@ -17,8 +17,9 @@ $validtypes = ["ip", "email"];
 
 switch(getView()) {
 case "delete":
-	if (!isset($_POST['zomgkey']) || $_POST['zomgkey'] != md5($opt['salt'] . date("H")))
-		exit('<p>Invalid token. <a href="manage_categories.php">Try again</a>?</p>');
+	if (!isset($_POST['zomgkey']) || $_POST['zomgkey'] != md5($opt['salt'] . date("H"))) {
+        exit('<p>Invalid token. <a href="manage_categories.php">Try again</a>?</p>');
+    }
 	
 	doDelete("banned", $_POST['del']);
 break;
@@ -26,16 +27,20 @@ case "add":
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
-		if (!in_array($_POST['type'], $validtypes))
-			$error = "Invalid ban type; please try again.";
-		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue']))
-			$error = "Ban value doesn't match legitimate e-mail address; please try again.";
-		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue']))
-			$error = "Ban value doesn't match legitimate IP address; please try again.";
+		if (!in_array($_POST['type'], $validtypes)) {
+            $error = "Invalid ban type; please try again.";
+        }
+		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue'])) {
+            $error = "Ban value doesn't match legitimate e-mail address; please try again.";
+        }
+		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue'])) {
+            $error = "Ban value doesn't match legitimate IP address; please try again.";
+        }
 		
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                $$key = clean($value);
+            }
 
 			$addBan = $mysql->query("INSERT INTO `".$dbpref."banned` (`type`, `value`) VALUES ('".$type."', '".$banvalue."')");
 			
@@ -47,8 +52,9 @@ case "add":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 ?>
 		<form action="manage_banned.php?v=add" method="post" id="linkform">
@@ -68,26 +74,32 @@ case "add":
 <?php
 break;
 case "edit":
-	if (!isset($_GET['id']) || !is_numeric($_GET['id']))
-		exit('<p>Invalid category ID</p>');
+	if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+        exit('<p>Invalid category ID</p>');
+    }
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
 		// check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-		if ($_POST['banid'] != md5($opt['salt'] . $_GET['id']))
-			exit('<p>Ban item IDs do not match</p>');
+		if ($_POST['banid'] != md5($opt['salt'] . $_GET['id'])) {
+            exit('<p>Ban item IDs do not match</p>');
+        }
 		
-		if (!in_array($_POST['type'], $validtypes))
-			$error = "Invalid ban type; please try again.";
-		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue']))
-			$error = "Ban value doesn't match legitimate e-mail address; please try again.";
-		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue']))
-			$error = "Ban value doesn't match legitimate IP address; please try again.";
+		if (!in_array($_POST['type'], $validtypes)) {
+            $error = "Invalid ban type; please try again.";
+        }
+		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue'])) {
+            $error = "Ban value doesn't match legitimate e-mail address; please try again.";
+        }
+		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue'])) {
+            $error = "Ban value doesn't match legitimate IP address; please try again.";
+        }
 
 		if ($error == NULL) {
-			foreach($_POST as $key => $value)
-				$$key = clean($value);
+			foreach($_POST as $key => $value) {
+                $$key = clean($value);
+            }
 
 			$editBan = $mysql->query("UPDATE `".$dbpref."banned` SET
 				`type` = '".$type."',
@@ -102,25 +114,30 @@ case "edit":
 		}
 	}
 	
-	if (isset($error))
-		echo '<p class="red">'.$error.'</p>';
+	if (isset($error)) {
+        echo '<p class="red">' . $error . '</p>';
+    }
 	
 	$getbanned = $mysql->query("SELECT * FROM `".$dbpref."banned` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
 	if ($mysql->count($getbanned) == 1) {
 		$ban = $mysql->fetchAssoc($getbanned);
 ?>
-		<form action="manage_banned.php?v=edit&amp;id=<?php echo $ban['id']; ?>" method="post" id="linkform">
+		<form action="manage_banned.php?v=edit&amp;id=<?= $ban['id'] ?>" method="post" id="linkform">
 		<fieldset>
-			<input type="hidden" name="banid" id="banid" value="<?php echo md5($opt['salt'] . $ban['id']); ?>" />
+			<input type="hidden" name="banid" id="banid" value="<?= md5($opt['salt'] . $ban['id']) ?>" />
 
 			<label for="type">Update Title</label>
 			<select name="type" id="type">
-				<option value="ip"<?php if ($ban['type'] == "ip") echo ' selected="selected"'; ?>>IP Address</option>
-				<option value="email"<?php if ($ban['type'] == "email") echo ' selected="selected"'; ?>>Email Address</option>
+				<option value="ip"<?php if ($ban['type'] == "ip") {
+                    echo ' selected="selected"';
+                } ?>>IP Address</option>
+				<option value="email"<?php if ($ban['type'] == "email") {
+                    echo ' selected="selected"';
+                } ?>>Email Address</option>
 			</select>
 			
 			<label for="banvalue">Ban Value (IP/Email)</label>
-			<input type="text" name="banvalue" id="banvalue" value="<?php echo $ban['value']; ?>" />
+			<input type="text" name="banvalue" id="banvalue" value="<?= $ban['value'] ?>" />
 
 			<input type="submit" name="submit" class="button" value="Edit Ban" />
 		</fieldset>
@@ -142,15 +159,19 @@ default:
 ?>
 	<form action="manage_banned.php?v=delete" method="post">
 	<p>
-		<input type="hidden" name="zomgkey" id="zomgkey" value="<?php echo md5($opt['salt'] . date("H")); ?>" />
+		<input type="hidden" name="zomgkey" id="zomgkey" value="<?= md5($opt['salt'] . date("H")) ?>" />
 	</p>
 	<table>
 	<tr><th>Ban Value</th> <th>Ban Type</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
 	while ($b = $mysql->fetchAssoc($adminBaned)) {
-		if ($rowCount % 2) $rowClass = 'linkeven';
-		else $rowClass = 'linkodd';
+		if ($rowCount % 2) {
+            $rowClass = 'linkeven';
+        }
+		else {
+            $rowClass = 'linkodd';
+        }
 
 		echo '
 			<tr class="'.$rowClass.'"><td>'.$b['type'].'</td> 

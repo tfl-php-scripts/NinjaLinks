@@ -90,7 +90,7 @@ function escape($input)
 function nl2p($pee, $br = 1)
 {
     /* THANK YOU MATT - http://ma.tt & http://wordpress.org */
-    $pee = $pee . "\n"; // just to make things a little easier, pad the end
+    $pee .= "\n"; // just to make things a little easier, pad the end
     $pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
     // Space things out a little
     $allblocks = '(?:table|thead|tfoot|caption|colgroup|tbody|tr|td|th|div|dl|dd|dt|ul|ol|li|pre|select|form|blockquote|address|math|style|script|object|input|param|p|h[1-6])';
@@ -318,14 +318,12 @@ function validateButton($button)
 
     if (!$imginfo = @getimagesize($button)) {
         $error[] = "Invalid file - images only.";
-    } else {
-        if ($imginfo[0] > $opt['buttonmaxwidth']) {
-            $error[] = "Button too wide; max width: " . $opt['buttonmaxwidth'];
-        } elseif ($imginfo[1] > $opt['buttonmaxheight']) {
-            $error[] = "Button too high; max height: " . $opt['buttonmaxheight'];
-        } elseif ($imginfo[2] == 4) {
-            $error[] = "Only jpg, gif and png buttons are supported.";
-        }
+    } elseif ($imginfo[0] > $opt['buttonmaxwidth']) {
+        $error[] = "Button too wide; max width: " . $opt['buttonmaxwidth'];
+    } elseif ($imginfo[1] > $opt['buttonmaxheight']) {
+        $error[] = "Button too high; max height: " . $opt['buttonmaxheight'];
+    } elseif ($imginfo[2] == 4) {
+        $error[] = "Only jpg, gif and png buttons are supported.";
     }
 
     if (!isset($error) || count($error) > 0) {
@@ -431,12 +429,10 @@ function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected =
                     }
 
                     echo '<option value="' . $catid . '"' . $disallow . $showsel . '>' . $value . '</option>' . "\r\n";
+                } elseif ($opt['topdirlinks'] == 1) {
+                    echo '<li><a href="links.php?cat=' . $catid . '">' . $value . '</a> (' . $cats[$catid]['linkcount'] . ' links)</li>' . "\r\n";
                 } else {
-                    if ($opt['topdirlinks'] == 1) {
-                        echo '<li><a href="links.php?cat=' . $catid . '">' . $value . '</a> (' . $cats[$catid]['linkcount'] . ' links)</li>' . "\r\n";
-                    } else {
-                        echo '<li>' . $value . '</li>' . "\r\n";
-                    }
+                    echo '<li>' . $value . '</li>' . "\r\n";
                 }
             } elseif ($key == "subcats") {
                 if (is_array($value)) {
@@ -508,9 +504,9 @@ function getUpdates($limit)
     $updates = $mysql->query("SELECT *, DATE_FORMAT(`datetime`, '%a %D %b %Y \- %H:%i') AS `date` FROM `" . $dbpref . "updates` ORDER BY `datetime` DESC LIMIT " . $limit);
     while ($u = $mysql->fetchAssoc($updates)) {
         ?>
-        <h2><?php echo $u['title']; ?></h2>
-        <?php echo nl2p($u['entry']); ?>
-        <p class="updatemeta">Posted on <?php echo $u['date']; ?></p>
+        <h2><?= $u['title'] ?></h2>
+        <?= nl2p($u['entry']) ?>
+        <p class="updatemeta">Posted on <?= $u['date'] ?></p>
         <?php
     }
 }
@@ -593,12 +589,10 @@ function doCheckLogin()
 
     if (!isset($_SESSION['nlLogin'])) {
         return false;
+    } elseif ($_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']))) {
+        return true;
     } else {
-        if ($_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']))) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 }
 

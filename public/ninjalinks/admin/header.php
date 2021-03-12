@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -21,7 +21,7 @@ if (doCheckLogin() === false) {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="../stylesheet.css" rel="stylesheet" type="text/css" />
 
-<title><?php echo $opt['dirname']; ?> Admin Panel</title>
+<title><?= $opt['dirname'] ?> Admin Panel</title>
 
 </head>
 <body>
