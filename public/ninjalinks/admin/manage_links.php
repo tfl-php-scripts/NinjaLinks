@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -88,8 +88,8 @@ case "edit":
 		echo '<p class="red">'.$error.'</p>';
 	
 	$getlink = $mysql->query("SELECT `".$dbpref."links`.*, `".$dbpref."categories`.`catname` FROM `".$dbpref."links` LEFT JOIN `".$dbpref."categories` ON `".$dbpref."links`.`category` = `".$dbpref."categories`.`id` WHERE `".$dbpref."links`.`id` = ".(int)$_GET['id']." LIMIT 1");
-	if (mysql_num_rows($getlink) == 1) {
-		$link = mysql_fetch_assoc($getlink);
+	if ($mysql->count($getlink) === 1) {
+		$link = $mysql->fetchAssoc($getlink);
 ?>
 		<form action="manage_links.php?v=edit&amp;id=<?php echo $link['id']; ?>" method="post" id="linkform">
 		<fieldset>
@@ -165,7 +165,7 @@ default:
 	<tr><th>Link URL</th> <th>Link Name</th> <th>Description</th> <th>Category</th> <th>Date Added</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
-	while ($l = mysql_fetch_assoc($adminLinks)) {
+	while ($l = $mysql->fetchAssoc($adminLinks)) {
 		if ($rowCount % 2) $rowClass = 'linkeven';
 		else $rowClass = 'linkodd';
 		if ($l['approved'] == 0) $rowClass = 'pending';

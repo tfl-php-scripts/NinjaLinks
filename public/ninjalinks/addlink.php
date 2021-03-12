@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		
 	if ($opt['allowdupes'] == 0 && !empty($_POST['linkurl'])) {
 		$findLink = $mysql->query("SELECT * FROM `".$dbpref."links` WHERE `linkurl` LIKE '%".clean($_POST['linkurl'], 'yes')."%' LIMIT 1");
-		if (mysql_num_rows($findLink) == 1)
+		if ($mysql->count($findLink) == 1)
 			$error = "Duplicate link detected - please only add your website once.";
 	}
 	

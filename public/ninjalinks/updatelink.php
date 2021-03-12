@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -18,8 +18,8 @@ include('header.php');
 if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 	if (isset($_GET['key']) && strlen($_GET['key']) == 32) {
 		$findLink = $mysql->query("SELECT * FROM `".$dbpref."links` WHERE `id` = '".(int)$_GET['linkid']."'");
-		if (mysql_num_rows($findLink) > 0) {
-			$link = mysql_fetch_assoc($findLink);
+		if ($mysql->count($findLink) > 0) {
+			$link = $mysql->fetchAssoc($findLink);
 			if ($_GET['key'] == md5($link['linkname'] . $link['owneremail'] . date("Y-m-d"))) {
 				if ($_SERVER['REQUEST_METHOD'] == "POST") {
 					$error = NULL;
@@ -164,10 +164,10 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 		$email = clean($_POST['email'], 'yes');
 		
 		$findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `".$dbpref."links` WHERE `owneremail` = '".$email."'");
-		if (mysql_num_rows($findSites) > 0) {
+		if ($mysql->count($findSites) > 0) {
 			$message = "Thank you for requesting a link update from ".$opt['dirname']."\r\n\r\n";
 			$message .= "The following sites were found to be associated with your e-mail address; please click the link under each one to begin editing:\r\n";
-			while ($r = mysql_fetch_assoc($findSites)) {
+			while ($r = $mysql->fetchAssoc($findSites)) {
 				$message .= "Link: ".$r['linkname']." - ".$r['linkurl']."\r\n";
 				$message .= $opt['dirlink']."updatelink.php?linkid=".$r['id']."&key=".md5($r['linkname'] . $email . date("Y-m-d"))."\r\n\r\n";
 			}

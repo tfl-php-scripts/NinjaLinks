@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -98,8 +98,8 @@ case "edit":
 		echo '<p class="red">'.$error.'</p>';
 	
 	$getupdate = $mysql->query("SELECT * FROM `".$dbpref."updates` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
-	if (mysql_num_rows($getupdate) == 1) {
-		$up = mysql_fetch_assoc($getupdate);
+	if ($mysql->count($getupdate) == 1) {
+		$up = $mysql->fetchAssoc($getupdate);
 ?>
 		<form action="manage_updates.php?v=edit&amp;id=<?php echo $up['id']; ?>" method="post" id="linkform">
 		<fieldset>
@@ -137,7 +137,7 @@ default:
 	<tr><th>Title</th> <th>Update Snippet</th> <th>Date Added</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
-	while ($u = mysql_fetch_assoc($adminUpdates)) {
+	while ($u = $mysql->fetchAssoc($adminUpdates)) {
 		if ($rowCount % 2) $rowClass = 'linkeven';
 		else $rowClass = 'linkodd';
 

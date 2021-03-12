@@ -2,8 +2,8 @@
 include('config.php');
 if (isset($_GET['link']) && is_numeric($_GET['link'])) {
 	$link = $mysql->query("SELECT `linkurl` FROM `".$dbpref."links` WHERE `id` = ".(int)$_GET['link']." LIMIT 1");
-	if (mysql_num_rows($link) == 1) {
-		$link = mysql_fetch_assoc($link);
+	if ($mysql->count($link) === 1) {
+		$link = $mysql->fetchAssoc($link);
 		$mysql->single("UPDATE `".$dbpref."links` SET `hits` = `hits` + 1 WHERE `id` = ".(int)$_GET['link']." LIMIT 1");
 		header("Status: 301");
 		header("Location: ".$link['linkurl']);

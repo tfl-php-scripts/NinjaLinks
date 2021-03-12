@@ -1,7 +1,11 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -105,8 +109,8 @@ case "edit":
 		echo '<p class="red">'.$error.'</p>';
 	
 	$getcat = $mysql->query("SELECT * FROM `".$dbpref."categories` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
-	if (mysql_num_rows($getcat) == 1) {
-		$cat = mysql_fetch_assoc($getcat);
+	if ($mysql->count($getcat) == 1) {
+		$cat = $mysql->fetchAssoc($getcat);
 ?>
 		<form action="manage_categories.php?v=edit&amp;id=<?php echo $cat['id']; ?>" method="post" id="linkform">
 		<fieldset>
@@ -149,7 +153,7 @@ default:
 	<tr><th>Category</th> <th>Subcategory Of..</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
-	while ($c = mysql_fetch_assoc($adminCats)) {
+	while ($c = $mysql->fetchAssoc($adminCats)) {
 		if ($rowCount % 2) $rowClass = 'linkeven';
 		else $rowClass = 'linkodd';
 	

@@ -105,8 +105,8 @@ case "edit":
 		echo '<p class="red">'.$error.'</p>';
 	
 	$getbanned = $mysql->query("SELECT * FROM `".$dbpref."banned` WHERE `id` = ".(int)$_GET['id']." LIMIT 1");
-	if (mysql_num_rows($getbanned) == 1) {
-		$ban = mysql_fetch_assoc($getbanned);
+	if ($mysql->count($getbanned) == 1) {
+		$ban = $mysql->fetchAssoc($getbanned);
 ?>
 		<form action="manage_banned.php?v=edit&amp;id=<?php echo $ban['id']; ?>" method="post" id="linkform">
 		<fieldset>
@@ -147,7 +147,7 @@ default:
 	<tr><th>Ban Value</th> <th>Ban Type</th> <th colspan="2">Admin</th></tr>
 <?php
 	$rowCount = 0;
-	while ($b = mysql_fetch_assoc($adminBaned)) {
+	while ($b = $mysql->fetchAssoc($adminBaned)) {
 		if ($rowCount % 2) $rowClass = 'linkeven';
 		else $rowClass = 'linkodd';
 
