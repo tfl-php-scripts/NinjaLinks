@@ -31,12 +31,12 @@ case "add":
 			$error = "Must enter a Category Name";
 		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['catname']))
 			$error = "Category Name contains invalid characters, please fix and try again.";
-		elseif ($mysql->single("SELECT `id` FROM `".$dbpref."categories` WHERE `catname` = '".clean($_POST['catname'], 'yes')."' LIMIT 1"))
+		elseif ($mysql->single("SELECT `id` FROM `".$dbpref."categories` WHERE `catname` = '".clean($_POST['catname'])."' LIMIT 1"))
 			$error = "A category with that name already exists.";
 
 		if ($error == NULL) {
 			foreach($_POST as $key => $value)
-				$$key = clean($value, 'yes');
+				$$key = clean($value);
 			
 			$addCat = $mysql->query("INSERT INTO `".$dbpref."categories` (`catname`, `catparent`) VALUES ('".$catname."', '".(int)$catparent."')");
 			
@@ -88,7 +88,7 @@ case "edit":
 		
 		if ($error == NULL) {
 			foreach($_POST as $key => $value)
-				$$key = clean($value, 'yes');
+				$$key = clean($value);
 
 			$editCat = $mysql->query("UPDATE `".$dbpref."categories` SET
 				`catname` = '".$catname."',

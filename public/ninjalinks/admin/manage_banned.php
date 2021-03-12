@@ -35,7 +35,7 @@ case "add":
 		
 		if ($error == NULL) {
 			foreach($_POST as $key => $value)
-				$$key = clean($value, 'yes');
+				$$key = clean($value);
 
 			$addBan = $mysql->query("INSERT INTO `".$dbpref."banned` (`type`, `value`) VALUES ('".$type."', '".$banvalue."')");
 			
@@ -87,7 +87,7 @@ case "edit":
 
 		if ($error == NULL) {
 			foreach($_POST as $key => $value)
-				$$key = clean($value, 'yes');
+				$$key = clean($value);
 
 			$editBan = $mysql->query("UPDATE `".$dbpref."banned` SET
 				`type` = '".$type."',

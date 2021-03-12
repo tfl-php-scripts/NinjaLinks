@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -50,7 +51,7 @@ case "edit":
 
 		if ($error == NULL) {
 			foreach($_POST as $key => $value)
-				$$key = clean($value, 'yes');
+				$$key = clean($value);
 
 			if (!isset($linkdesc)) $linkdesc = null;
 			if (!isset($linkbutton)) $linkbutton = null;

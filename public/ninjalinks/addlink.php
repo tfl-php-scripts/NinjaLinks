@@ -1,7 +1,11 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = "Link Description shouldn't be filled in! Do not tamper with the form.";
 		
 	if ($opt['allowdupes'] == 0 && !empty($_POST['linkurl'])) {
-		$findLink = $mysql->query("SELECT * FROM `".$dbpref."links` WHERE `linkurl` LIKE '%".clean($_POST['linkurl'], 'yes')."%' LIMIT 1");
+		$findLink = $mysql->query("SELECT * FROM `".$dbpref."links` WHERE `linkurl` LIKE '%".clean($_POST['linkurl'])."%' LIMIT 1");
 		if ($mysql->count($findLink) == 1)
 			$error = "Duplicate link detected - please only add your website once.";
 	}
@@ -79,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	if ($error == NULL) {
 		foreach($_POST as $key => $value) 
-			$$key = clean($value, 'yes');
+			$$key = clean($value);
 			
 		if (isset($linkbutton) && !empty($linkbutton)) {
 			$butOutput = getButton($linkbutton);

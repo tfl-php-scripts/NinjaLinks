@@ -519,13 +519,13 @@ function getStats($stat)
 {
     global $mysql, $dbpref;
 
-    if ($stat == "total") {
-        return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links`");
-    } elseif ($stat == "approved") {
+    if ($stat == "approved") {
         return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links` WHERE `approved` = 1");
     } elseif ($stat == "pending") {
         return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links` WHERE `approved` = 0");
     }
+
+    return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links`");
 }
 
 function getPage()

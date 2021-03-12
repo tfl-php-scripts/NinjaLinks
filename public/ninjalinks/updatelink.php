@@ -51,7 +51,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 
 					if ($error == NULL) {
 						foreach($_POST as $key => $value)
-							$$key = clean($value, 'yes');
+							$$key = clean($value);
 
 						if (isset($linkbutton) && !empty($linkbutton)) {
 							$butOutput = getButton($linkbutton);
@@ -165,7 +165,7 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = "Invalid E-mail Address, please fix and try again.";
 	
 	if ($error == null) {
-		$email = clean($_POST['email'], 'yes');
+		$email = clean($_POST['email']);
 		
 		$findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `".$dbpref."links` WHERE `owneremail` = '".$email."'");
 		if ($mysql->count($findSites) > 0) {

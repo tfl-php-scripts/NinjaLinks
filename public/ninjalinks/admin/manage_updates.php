@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -31,7 +32,7 @@ case "add":
 				if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0)
 					$$key = escape($value);
 				else
-					$$key = clean($value, 'yes');
+					$$key = clean($value);
 
 			$addUpdate = $mysql->query("INSERT INTO `".$dbpref."updates` (`title`, `entry`, `datetime`) VALUES ('".$title."', '".$entry."', '". TODAY ."')");
 			
@@ -79,7 +80,7 @@ case "edit":
 				if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0)
 					$$key = escape($value);
 				else
-					$$key = clean($value, 'yes');
+					$$key = clean($value);
 
 			$editUpdate = $mysql->query("UPDATE `".$dbpref."updates` SET
 				`title` = '".$title."',
