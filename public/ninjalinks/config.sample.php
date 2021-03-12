@@ -32,7 +32,7 @@ $opt['uploaddir'] = "/home/username/public_html/ninjalinks/"; // the absolute pa
 $opt['emailnew'] = 1; // (1 = yes, 0 = no)  email admin on new link submission
 $opt['emailuser'] = 1; // (1 = yes, 0 = no)  email user when link is approved
 
-$opt['approvalmail'] = "Thank you for submitting a link to ".$opt['dirname']." - your link has now been approved.";
+$opt['approvalmail'] = "Thank you for submitting a link to " . $opt['dirname'] . " - your link has now been approved.";
 
 $opt['topdirlinks'] = 1; // (1 = yes, 0 = no) allow links submitted in top level categories
 $opt['opentarget'] = 0; // (1 = yes, 0 = no) target to new windows?

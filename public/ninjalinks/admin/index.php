@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -15,14 +15,14 @@ declare(strict_types = 1);
 include('header.php'); ?>
 
 
-<?php 
-if (getStats("pending") > 0) {
-?>
-	<p>You have <?= getStats("pending") ?> pending link(s).</p>
-
 <?php
+if (getStats("pending") > 0) {
+    ?>
+    <p>You have <?= getStats("pending") ?> pending link(s).</p>
+
+    <?php
 } else {
-	echo '<p>You have no links pending approval.</p>';
+    echo '<p>You have no links pending approval.</p>';
 }
 
 if (file_exists("../install.php")) {

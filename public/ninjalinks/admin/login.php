@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -13,15 +13,15 @@ declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-	require('../config.php');
-	if ($_POST['username'] == $opt['user'] && $_POST['password'] == $opt['pass']) {
-		// password is correct
-		session_start();
+    require('../config.php');
+    if ($_POST['username'] == $opt['user'] && $_POST['password'] == $opt['pass']) {
+        // password is correct
+        session_start();
 
-		$_SESSION['nlLogin'] = md5($opt['user'].md5($opt['pass'].$opt['salt']));
-		header("Location: index.php");
-		exit;
-	}
+        $_SESSION['nlLogin'] = md5($opt['user'] . md5($opt['pass'] . $opt['salt']));
+        header("Location: index.php");
+        exit;
+    }
 
     exit("<p>Invalid username and/or password.</p>");
 }
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <title>NinjaLinks Login Form</title>
 </head>
 <body>
-    <form method="post" action="login.php">
+<form method="post" action="login.php">
 
     Username:<br>
     <input type="text" name="username" id="username" required><br>
@@ -43,6 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <input type="submit" name="submit" value="Login">
 
-    </form>
+</form>
 </body>
 </html>
