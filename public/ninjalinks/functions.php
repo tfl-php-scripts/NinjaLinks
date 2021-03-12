@@ -292,9 +292,9 @@ function isBanned($email)
 
         if (in_array($email, $list['email'])) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     } else {
         return false;
     }
@@ -375,9 +375,9 @@ function getButton($button)
         }
 
         return $results;
-    } else {
-        return null;
     }
+
+    return null;
 }
 
 function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected = null, $level = 2)
@@ -581,11 +581,7 @@ function doCheckLogin()
         return false;
     }
 
-    if ($_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']))) {
-        return true;
-    } else {
-        return false;
-    }
+    return $_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']));
 }
 
 function doDelete($table, $ids)
