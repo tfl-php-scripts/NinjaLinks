@@ -67,10 +67,9 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 							if (is_array($butOutput)) {
                                 exit(print_r($error));
                             }
-							else {
-                                $linkbutton = basename($butOutput);
-                            }
-						} else {
+
+                            $linkbutton = basename($butOutput);
+                        } else {
 							$linkbutton = null;
 						}
 						if (!isset($linkdesc)) {
@@ -163,10 +162,10 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 <?php
 				include('footer.php');
 				exit;
-			} else {
-				$error = "Could not find link for updating: invalid link key";
 			}
-		} else {
+
+            $error = "Could not find link for updating: invalid link key";
+        } else {
 			$error = "Could not find link for updating: invalid link ID";
 		}
 	} else {
@@ -217,4 +216,3 @@ if (isset($error)) {
 
 <?php
 include('footer.php');
-?>

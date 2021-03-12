@@ -55,7 +55,7 @@ class SQLConnection
      * @param mysqli_result $query
      * @return string[]|null
      */
-    public function fetchAssoc(mysqli_result $query)
+    public function fetchAssoc(mysqli_result $query): ?array
     {
         return mysqli_fetch_assoc($query);
     }
@@ -293,7 +293,9 @@ function isBanned($email)
 
         if (in_array($_SERVER['REMOTE_ADDR'], $list['ip'])) {
             return true;
-        } elseif (in_array($email, $list['email'])) {
+        }
+
+        if (in_array($email, $list['email'])) {
             return true;
         } else {
             return false;
@@ -328,9 +330,9 @@ function validateButton($button)
 
     if (!isset($error) || count($error) > 0) {
         return $button;
-    } else {
-        return $error;
     }
+
+    return $error;
 }
 
 // for bug testing purposes
@@ -384,9 +386,9 @@ function getButton($button)
 
         if ($results == $temp) {
             return $temp;
-        } else {
-            return $results;
         }
+
+        return $results;
     } else {
         return null;
     }
@@ -517,7 +519,9 @@ function getStats($stat)
 
     if ($stat == "approved") {
         return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links` WHERE `approved` = 1");
-    } elseif ($stat == "pending") {
+    }
+
+    if ($stat == "pending") {
         return $mysql->single("SELECT COUNT(`id`) FROM `" . $dbpref . "links` WHERE `approved` = 0");
     }
 
@@ -578,9 +582,9 @@ function doEmail($recipient, $subject, $message, $xtraheaders = '')
 
     if (mail($recipient, $subject, $message, $headers)) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function doCheckLogin()
@@ -589,7 +593,9 @@ function doCheckLogin()
 
     if (!isset($_SESSION['nlLogin'])) {
         return false;
-    } elseif ($_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']))) {
+    }
+
+    if ($_SESSION['nlLogin'] == md5($opt['user'] . md5($opt['pass'] . $opt['salt']))) {
         return true;
     } else {
         return false;
@@ -626,9 +632,9 @@ function isInstalled()
     $findTables = $mysql->query("SHOW TABLES FROM `" . $dbname . "`");
     if ($mysql->count($findTables)) {
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function checkInstall()

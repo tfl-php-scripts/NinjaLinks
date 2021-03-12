@@ -1,12 +1,17 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007, 2008 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
+
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	require('../config.php');
 	if ($_POST['username'] == $opt['user'] && $_POST['password'] == $opt['pass']) {
@@ -16,25 +21,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$_SESSION['nlLogin'] = md5($opt['user'].md5($opt['pass'].$opt['salt']));
 		header("Location: index.php");
 		exit;
-	} else {
-		exit("<p>Invalid username and/or password.</p>");
 	}
+
+    exit("<p>Invalid username and/or password.</p>");
 }
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-"http://www.w3.org/TR/html4/strict.dtd">
-
-<html>
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
 <head>
+    <meta name="language" content="en"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>NinjaLinks Login Form</title>
 </head>
 <body>
     <form method="post" action="login.php">
 
     Username:<br>
-    <input type="text" name="username" id="username"><br>
+    <input type="text" name="username" id="username" required><br>
     Password:<br>
-    <input type="password" name="password" id="password"><br>
+    <input type="password" name="password" id="password" required><br>
 
     <input type="submit" name="submit" value="Login">
 

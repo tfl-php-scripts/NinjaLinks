@@ -30,4 +30,3 @@ if (file_exists("../install.php")) {
 }
 
 include('../footer.php');
-?>

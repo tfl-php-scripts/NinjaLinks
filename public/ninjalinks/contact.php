@@ -118,4 +118,3 @@ if ($error_msg != NULL) {
 
 <?php
 include('footer.php');
-?>

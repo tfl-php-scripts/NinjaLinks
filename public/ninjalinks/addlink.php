@@ -112,10 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			if (is_array($butOutput)) {
                 exit(print_r($error));
             }
-			else {
-                $linkbutton = basename($butOutput);
-            }
-		} else {
+
+            $linkbutton = basename($butOutput);
+        } else {
 			$linkbutton = null;
 		}
 		if (!isset($linkdesc)) {
@@ -201,8 +200,5 @@ if (isset($error)) {
 	</fieldset>
 </form>
 
-
-
 <?php
 include('footer.php');
-?>

@@ -197,4 +197,3 @@ default:
 break;
 }
 include('../footer.php');
-?>
