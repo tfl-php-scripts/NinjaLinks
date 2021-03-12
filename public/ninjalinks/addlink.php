@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	if (!empty($_POST['linkdesc']) && preg_match("/(<.*>)/i", $_POST['linkdesc'])) {
         $karma += 2;
     }
-	if (!empty($_POST['ownername']) && strlen($_POST['ownername']) < 3 || strlen($_POST['ownername']) > 15) {
+	if (!empty($_POST['ownername']) && (strlen($_POST['ownername']) < 3 || strlen($_POST['ownername']) > 15)) {
         $karma += 2;
     }
 	if (strlen($_POST['linkurl']) > 30) {

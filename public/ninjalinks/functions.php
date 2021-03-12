@@ -125,7 +125,7 @@ function make_excerpt($entry, $excerpt_length, $extension, $cutword = 'false')
 {
     $entry = strip_tags($entry);
     $cutmarker = "**cut_here**";
-    if (strlen($entry) > $excerpt_length) {
+    if (is_array($entry) && strlen($entry) > $excerpt_length) {
         $entry = wordwrap($entry, $excerpt_length, $cutmarker, $cutword);
         $entry = explode($cutmarker, $entry);
         $entry = $entry[0] . $extension;
@@ -273,7 +273,7 @@ function badMailKarma($input)
 
 function isBanned($email)
 {
-    global $mysql, $opt, $dbpref;
+    global $mysql, $dbpref;
 
     $list = [];
     $getbanned = $mysql->query("SELECT * FROM `" . $dbpref . "banned`");
@@ -305,7 +305,6 @@ function validateButton($button)
     global $opt;
 
     $allowed = [".jpg", ".gif", ".png"];
-    $errors = [];
 
     if (filesize($button) > $opt['buttonsize']) {
         $error[] = "Button larger than max file size";
@@ -328,14 +327,6 @@ function validateButton($button)
     }
 
     return $error;
-}
-
-// for bug testing purposes
-function niceArray($input)
-{
-    echo '<pre>';
-    print_r($input);
-    echo '</pre>';
 }
 
 // GET FUNCTIONS
@@ -496,7 +487,7 @@ function getLinks($offset, $limit, $category)
 
 function getUpdates($limit)
 {
-    global $mysql, $opt, $dbpref;
+    global $mysql, $dbpref;
 
     $updates = $mysql->query("SELECT *, DATE_FORMAT(`datetime`, '%a %D %b %Y \- %H:%i') AS `date` FROM `" . $dbpref . "updates` ORDER BY `datetime` DESC LIMIT " . $limit);
     while ($u = $mysql->fetchAssoc($updates)) {
@@ -567,7 +558,7 @@ function doEmail($recipient, $subject, $message, $xtraheaders = '')
 {
     global $opt;
 
-    if (strstr($_SERVER['SERVER_SOFTWARE'], "Win")) {
+    if (strpos($_SERVER['SERVER_SOFTWARE'], "Win") !== false) {
         $headers = "From: " . $opt['email'];
     } else {
         $headers = "From: " . $opt['dirname'] . " <" . $opt['email'] . ">";
@@ -622,7 +613,7 @@ function doDelete($table, $ids)
 
 function isInstalled()
 {
-    global $mysql, $dbname, $dbpref;
+    global $mysql, $dbname;
 
     $findTables = $mysql->query("SHOW TABLES FROM `" . $dbname . "`");
     if ($mysql->count($findTables)) {
