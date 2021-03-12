@@ -29,7 +29,7 @@ class SQLConnection
     public function query($query)
     {
         $result = mysqli_query($this->mysqli_connect, $query);
-        if (!$result) {
+        if ($result === false) {
             doError('query-fail');
         }
 
@@ -39,7 +39,7 @@ class SQLConnection
     public function single($query)
     {
         $result = $this->query($query);
-        if (!$result) {
+        if ($result === false) {
             exit('Could not run query: ' . mysqli_error($this->mysqli_connect));
         }
         $array = mysqli_fetch_array($result);
@@ -669,6 +669,3 @@ function doError($errorID)
     include('footer.php');
     exit;
 }
-
-error_reporting(0);
-?>
