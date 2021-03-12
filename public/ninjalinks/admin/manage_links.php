@@ -33,7 +33,7 @@ case "edit":
 			if (in_array($key, $opt['required']) && empty($value))
 				$error = $key.' is a required field.';
 		
-		if (!ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", strtolower($_POST['email'])))
+		if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email']))
 			$error = "Invalid E-mail Address, please fix and try again.";
 		elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
 			$error = "Invalid Link URL, please fix and try again.";

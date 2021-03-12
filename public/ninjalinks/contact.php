@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// NinjaLinks Copyright © Jem Turner 2007-2009 unless otherwise noted
+// NinjaLinks Copyright ï¿½ Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -43,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error_msg .= "Name, e-mail and comments are required fields. \n";
 	elseif (strlen($_POST['name']) > 15)
 		$error_msg .= "The name field is limited at 15 characters. Your first name or nickname will do! \n";
-	elseif (!ereg("^[A-Za-z' -]*$", $_POST['name']))
+	elseif (!preg_match("/^[A-Za-z' -]*$/", $_POST['name']))
 		$error_msg .= "The name field must not contain special characters. \n";
-	elseif (!ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", strtolower($_POST['email'])))
+	elseif (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email']))
 		$error_msg .= "That is not a valid e-mail address. \n";
 	elseif (!empty($_POST['url']) && !preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['url']))
 		$error_msg .= "Invalid Link URL, please fix and try again.\n";

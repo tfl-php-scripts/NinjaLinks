@@ -1,7 +1,11 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
+//
+// Contributor (since 2021): Ekaterina <scripts@robotess.net>
+// http://scripts.robotess.net
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License. See README.txt
@@ -32,7 +36,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 						if (in_array($key, $opt['required']) && empty($value))
 							$error = $key.' is a required field.';
 					
-					if (!ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", strtolower($_POST['email'])))
+					if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i", $_POST['email']))
 						$error = "Invalid E-mail Address, please fix and try again.";
 					elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
 						$error = "Invalid Link URL, please fix and try again.";
@@ -157,7 +161,7 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
 	$error = NULL;
 	checkBots();
 	
-	if (!ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $_POST['email']))
+	if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email']))
 		$error = "Invalid E-mail Address, please fix and try again.";
 	
 	if ($error == null) {

@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	
 	if (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['ownername']))
 		$error = "Name contains invalid characters. Please fix and try again.";
-	elseif (!ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $_POST['email']))
+	elseif (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email']))
 		$error = "Invalid E-mail Address, please fix and try again.";
 	elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['linkurl']))
 		$error = "Invalid Link URL, please fix and try again. Link must start with 'http://' and contain no special characters.";

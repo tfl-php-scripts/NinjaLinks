@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007, 2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -27,7 +28,7 @@ case "add":
 
 		if (!in_array($_POST['type'], $validtypes))
 			$error = "Invalid ban type; please try again.";
-		if ($_POST['type'] == "email" && !ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $_POST['banvalue']))
+		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue']))
 			$error = "Ban value doesn't match legitimate e-mail address; please try again.";
 		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue']))
 			$error = "Ban value doesn't match legitimate IP address; please try again.";
@@ -79,7 +80,7 @@ case "edit":
 		
 		if (!in_array($_POST['type'], $validtypes))
 			$error = "Invalid ban type; please try again.";
-		if ($_POST['type'] == "email" && !ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", $_POST['banvalue']))
+		if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['banvalue']))
 			$error = "Ban value doesn't match legitimate e-mail address; please try again.";
 		elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i', $_POST['banvalue']))
 			$error = "Ban value doesn't match legitimate IP address; please try again.";

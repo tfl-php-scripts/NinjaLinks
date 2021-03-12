@@ -21,7 +21,7 @@ case "add":
 	if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$error = NULL;
 
-		if (!ereg("^[A-Za-z0-9\(\)_' -]*$", $_POST['title']))
+		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title']))
 			$error = "Title contains invalid characters, please fix and try again.";
 		elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['title']))
 			$error = "Title contains invalid characters. Please amend and try again.";
@@ -71,7 +71,7 @@ case "edit":
 		if ($_POST['updid'] != md5($opt['salt'] . $_GET['id']))
 			exit('<p>Update IDs do not match</p>');
 		
-		if (!ereg("^[A-Za-z0-9\(\)_' -]*$", $_POST['title']))
+		if (!preg_match("/^[A-Za-z0-9\(\)_' -]*$/", $_POST['title']))
 			$error = "Title contains invalid characters, please fix and try again.";
 
 		if ($error == NULL) {

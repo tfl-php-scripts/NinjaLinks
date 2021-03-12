@@ -83,7 +83,7 @@ case "edit":
 		
 		if (!is_numeric($_POST['catparent']))
 			$error = "Invalid Parent Category, please fix and try again.";
-		elseif (!ereg("^[A-Za-z0-9]*$", $_POST['catname']))
+		elseif (!preg_match("/^[A-Za-z0-9]*$/", $_POST['catname']))
 			$error = "Category Name contains invalid characters, please fix and try again.";
 		
 		if ($error == NULL) {
