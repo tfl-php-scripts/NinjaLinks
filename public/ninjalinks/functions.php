@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 //-----------------------------------------------------------------------------
 // NinjaLinks Copyright � Jem Turner 2007-2009 unless otherwise noted
 // http://www.jemjabella.co.uk/
@@ -111,16 +111,11 @@ function nl2p($pee, $br = 1)
     $pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
     $pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
     if ($br) {
-        $pee = preg_replace_callback('/<(script|style).*?<\/\\1>/s', 'str_replace("\n", "<PreserveNewline />", "\\0")', $pee);
         $pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee); // optionally make line breaks
         $pee = str_replace('<PreserveNewline />', "\n", $pee);
     }
     $pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
     $pee = preg_replace('!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!', '$1', $pee);
-    if (strstr($pee, '<pre')) {
-        $pee = preg_replace_callback('!(<pre.*?>)(.*?)</pre>!is',
-            " stripslashes('$1') .  stripslashes(clean_pre('$2'))  . '</pre>' ", $pee);
-    }
     $pee = preg_replace("|\n</p>$|", '</p>', $pee);
     /**/
     return $pee;
