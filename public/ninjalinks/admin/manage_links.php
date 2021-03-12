@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 include('header.php');
 
 switch (getView()) {
@@ -42,8 +44,7 @@ switch (getView()) {
                 }
             }
 
-            if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i",
-                $_POST['email'])) {
+            if (!StringUtils::instance()->isEmailValid($_POST['email'])) {
                 $error = "Invalid E-mail Address, please fix and try again.";
             } elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i',
                 $_POST['linkurl'])) {
@@ -54,17 +55,13 @@ switch (getView()) {
                 $error = "Invalid 'approve' option, please fix and try again.";
             }
 
-            if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton'])) {
-                $error = "Button URL shouldn't be filled in!";
-            }
-
             if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc'])) {
                 $error = "Link Description shouldn't be filled in!";
             }
 
             if ($error == null) {
                 foreach ($_POST as $key => $value) {
-                    $$key = clean($value);
+                    $$key = StringUtils::instance()->clean($value);
                 }
 
                 if (!isset($linkdesc)) {
@@ -79,7 +76,7 @@ switch (getView()) {
 				`owneremail` = '" . strtolower($email) . "',
 				`linkname` = '" . $linkname . "',
 				`linkurl` = '" . $linkurl . "', 
-				`linkbutton` = '" . $linkbutton . "',
+				`linkbutton` = '',
 				`linkdesc` = '" . $linkdesc . "',
 				`linktags` = '" . $linktags . "',
 				`category` = '" . (int)$linkcat . "',
@@ -122,21 +119,13 @@ switch (getView()) {
                     <input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>"/>
 
                     <label for="email">E-mail Address</label>
-                    <input type="text" name="email" id="email" value="<?= $link['owneremail'] ?>"/>
+                    <input type="email" name="email" id="email" value="<?= $link['owneremail'] ?>"/>
 
                     <label for="linkname">Link Name</label>
                     <input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>"/>
 
                     <label for="linkurl">Link URL</label>
-                    <input type="text" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"/>
-
-                    <?php if (!empty($link['linkbutton'])) {
-                        echo '<span class="label">Current button</span> <span class="button"><img src="' . $opt['dirlink'] . 'imgs/' . $link['linkbutton'] . '" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>';
-                    } ?>
-                    <?php if ($opt['allowbutton'] == 1) : ?>
-                        <label for="linkbutton">Link Button Path</label>
-                        <input type="text" name="linkbutton" id="linkbutton" value="<?= $link['linkbutton'] ?>"/>
-                    <?php endif; ?>
+                    <input type="url" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"/>
 
                     <?php if ($opt['allowdesc'] == 1) : ?>
                         <label for="linkdesc">Link Description</label>

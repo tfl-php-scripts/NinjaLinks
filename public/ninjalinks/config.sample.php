@@ -27,7 +27,7 @@ $opt['salt'] = "mmsalty"; // like a second password. you won't have to remember 
 
 $opt['dirname'] = "NinjaLinks Directory"; // the name of your directory
 $opt['dirlink'] = "http://www.your-website.com/ninjalinks/"; // the url your directory will be installed in - end with a slash: /
-$opt['uploaddir'] = "/home/username/public_html/ninjalinks/"; // the absolute path to a folder you wish to upload buttons too (only necessary if allowbutton = 1)
+$opt['uploaddir'] = "/home/username/public_html/ninjalinks/"; // deprecated, will be removed
 
 $opt['emailnew'] = 1; // (1 = yes, 0 = no)  email admin on new link submission
 $opt['emailuser'] = 1; // (1 = yes, 0 = no)  email user when link is approved
@@ -41,7 +41,6 @@ $opt['perpage'] = 20; // amount of links per page
 
 $opt['allowdesc'] = 1; // (1 = yes, 0 = no) allow site descriptions
 $opt['allowtags'] = 0; // (1 = yes, 0 = no) allow tags (in future, will enable search by tag, tag clouds etc)
-$opt['allowbutton'] = 1; // (1 = yes, 0 = no) allow link buttons
 $opt['allowdupes'] = 0; // (1 = yes, 0 = no) allow duplicate links
 
 $opt['buttonmaxwidth'] = 88; // max width allowed for buttons

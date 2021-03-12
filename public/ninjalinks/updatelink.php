@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 require('config.php');
 include('header.php');
 ?>
@@ -39,8 +41,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         }
                     }
 
-                    if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i",
-                        $_POST['email'])) {
+                    if (!StringUtils::instance()->isEmailValid($_POST['email'])) {
                         $error = "Invalid E-mail Address, please fix and try again.";
                     } elseif (!preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i',
                         $_POST['linkurl'])) {
@@ -49,29 +50,19 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         $error = "Invalid Category, please fix and try again.";
                     }
 
-                    if ($opt['allowbutton'] == 0 && !empty($_POST['linkbutton'])) {
-                        $error = "Button URL shouldn't be filled in!";
-                    }
-
                     if ($opt['allowdesc'] == 0 && !empty($_POST['linkdesc'])) {
                         $error = "Link Description shouldn't be filled in!";
                     }
 
                     if ($error == null) {
                         foreach ($_POST as $key => $value) {
-                            $$key = clean($value);
+                            $$key = StringUtils::instance()->clean($value);
                         }
 
-                        if (isset($linkbutton) && !empty($linkbutton)) {
-                            $butOutput = getButton($linkbutton);
-                            if (is_array($butOutput)) {
-                                exit(print_r($error));
-                            }
-
-                            $linkbutton = basename($butOutput);
-                        } else {
-                            $linkbutton = null;
+                        if (!isset($linktags)) {
+                            $linktags = null;
                         }
+
                         if (!isset($linkdesc)) {
                             $linkdesc = null;
                         }
@@ -81,7 +72,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 							`owneremail` = '" . strtolower($email) . "',
 							`linkname` = '" . $linkname . "',
 							`linkurl` = '" . $linkurl . "', 
-							`linkbutton` = '" . $linkbutton . "',
+							`linkbutton` = '',
 							`linkdesc` = '" . $linkdesc . "',
 							`linktags` = '" . $linktags . "',
 							`category` = '" . (int)$linkcat . "',
@@ -124,21 +115,13 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         <input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>"/>
 
                         <label for="email">E-mail Address</label>
-                        <input type="text" name="email" id="email" value="<?= $link['owneremail'] ?>"/>
+                        <input type="email" name="email" id="email" value="<?= $link['owneremail'] ?>"/>
 
                         <label for="linkname">Link Name</label>
                         <input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>"/>
 
                         <label for="linkurl">Link URL</label>
-                        <input type="text" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"/>
-
-                        <?php if (!empty($link['linkbutton'])) {
-                            echo '<span class="label">Current button</span> <span class="button"><img src="' . $opt['dirlink'] . 'imgs/' . $link['linkbutton'] . '" alt="" /><br /><small>(Remove file path from box below to delete button)</small></span>';
-                        } ?>
-                        <?php if ($opt['allowbutton'] == 1) : ?>
-                            <label for="linkbutton">Link Button</label>
-                            <input type="text" name="linkbutton" id="linkbutton" value="<?= $link['linkbutton'] ?>"/>
-                        <?php endif; ?>
+                        <input type="url" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"/>
 
                         <?php if ($opt['allowdesc'] == 1) : ?>
                             <label for="linkdesc">Link Description</label>
@@ -148,7 +131,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 
                         <?php if (isset($opt['allowtags']) && $opt['allowtags'] == 1) : ?>
                         <label for="linktags">Link Tags</label>
-                        <input type="text" name="linktags" id="linktags" value="<?= $link['linktags'] ?> />
+                        <input type="text" name="linktags" id="linktags" value="<?= $link['linktags'] ?>" />
 						<?php endif; ?>
 
 						<label for=" linkcat">Link Category</label>
@@ -178,14 +161,14 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     $error = null;
     checkBots();
 
-    if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/", $_POST['email'])) {
+    $email = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
+
+    if (!StringUtils::instance()->isEmailValid($email)) {
         $error = "Invalid E-mail Address, please fix and try again.";
     }
 
-    if ($error == null) {
-        $email = clean($_POST['email']);
-
-        $findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `" . $dbpref . "links` WHERE `owneremail` = '" . $email . "'");
+    if ($error === null) {
+        $findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `" . $dbpref . "links` WHERE LOWER(`owneremail`) = '" . $email . "'");
         if ($mysql->count($findSites) > 0) {
             $message = "Thank you for requesting a link update from " . $opt['dirname'] . "\r\n\r\n";
             $message .= "The following sites were found to be associated with your e-mail address; please click the link under each one to begin editing:\r\n";
@@ -207,8 +190,8 @@ if (isset($error)) {
 
     <form action="updatelink.php?viewsites" method="post" id="linkform">
         <fieldset>
-            <label for="email">E-mail Address</label>
-            <input type="text" name="email" id="email"/>
+            <label for="email">E-mail Address *</label>
+            <input type="email" name="email" id="email" required/>
 
             <input type="submit" name="submit" class="button" value="Find Links"/>
         </fieldset>

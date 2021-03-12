@@ -12,6 +12,7 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+require_once('inc/RobotessNet/Autoloader.php');
 
 // IMPORTANT FUNCTIONS -- DO NOT EDIT
 class SQLConnection
@@ -335,51 +336,6 @@ function ext($file)
     return strrchr($file, ".");
 }
 
-function getButton($button)
-{
-    global $opt;
-
-    if (function_exists('curl_init')) {
-        // curl stuff from: http://www.slowerbetter.com/2006/09/19/alternative-to-doing-file-operations-on-a-url-using-curl-in-php/
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $button);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $timeout = 5;
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-
-        $buttContents = curl_exec($ch);
-        curl_close($ch);
-
-        // pre-emptive null byte stripping before we rename - pointless?
-        $button = str_replace("\0", "", $button);
-
-        $temp = $opt['uploaddir'] . time() . "-" . rand() . ext($button);
-
-        if (!file_exists($temp)) {
-            $fp = fopen($temp, "w+");
-
-            if (fwrite($fp, $buttContents) === false) {
-                fclose($fp);
-                unlink($fp);
-                return null;
-            }
-            fclose($fp);
-        }
-
-        $results = validateButton($temp);
-
-        if ($results == $temp) {
-            return $temp;
-        }
-
-        return $results;
-    }
-
-    return null;
-}
-
 function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected = null, $level = 2)
 {
     global $mysql, $opt, $dbpref;
@@ -470,11 +426,7 @@ function getLinks($offset, $limit, $category)
             echo ' rel="nofollow"';
         }
         echo '>';
-        if ($opt['allowbutton'] == 1 && !empty($l['linkbutton'])) {
-            echo '<img src="' . $opt['dirlink'] . 'imgs/' . $l['linkbutton'] . '" alt="' . $l['linkname'] . '" />';
-        } else {
-            echo $l['linkname'];
-        }
+        echo $l['linkname'];
         echo '</a> <em>(' . $l['hits'] . ' hits)</em>';
         if ($opt['allowdesc'] == 1) {
             echo '<br />' . $l['linkdesc'] . '</li>';
