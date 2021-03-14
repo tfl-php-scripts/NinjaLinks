@@ -2,47 +2,37 @@
 
 The main repository with the issue tracking can be found on [gitlab](https://gitlab.com/tfl-php-scripts/ninja-links).
 
-An original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor
-is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela
-is [here](https://gitlab.com/tfl-php-scripts/enthusiast/readme.txt).
+An original author is [Jem Turner](http://www.jemjabella.co.uk/scripts) / Original readme by Jem
+can be found [here](https://gitlab.com/tfl-php-scripts/ninja-links/-/blob/master/README.txt).
 
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
-This version requires at least PHP 7.2 and PDO_MySQL extensions (with MySQL = 5.7; or 5.6 - though it's pretty outdated)
-.
+This version requires at least PHP 7.2 and MySQLi extension turned on (tested on MySQL version 5.7 and 8.0.22).
 
-| PHP version | Supported by Enthusiast | Link to download |
+| PHP version | Supported by the script | Link to download |
 |------------------------------------------|-------------------------|---------------------|
-| 7.2 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/enthusiast/php72-php73-master.zip)|
-| 7.3 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/enthusiast/php72-php73-master.zip)| 
-| 7.4 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/enthusiast/php74-master.zip))|
+| 7.2 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)|
+| 7.3 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)| 
+| 7.4 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/ninja-links/-/archive/master/ninja-links-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/ninja-links/php74-master.zip))|
 | 8.0 | :grey_question: |-|
 
-**If you have MySQL 8.0 or higher, proper script operation is not guaranteed. For now, I'm not planning to fully support
-MySQL 8.0.**
-
-Changes are available in [changelog](https://gitlab.com/tfl-php-scripts/enthusiast/CHANGELOG.md).
+Changes are available in [changelog](https://gitlab.com/tfl-php-scripts/ninja-links/-/blob/master/CHANGELOG.md).
 
 ## Upgrading instructions
 
-I'm not providing support for those who have version lower than 3.1.5.
+I'm not providing support for those who have a script with the version lower than 1.1.
 
-If you are using Enthusiast 3.1.6 (old version by Angela) or Enthusiast [Robotess Fork] 1.* (previously - 3.2.* (my
-version)):
+If you are using NinjaLinks 1.1 (old version by Jem) or [Robotess Fork] 1.* (my version):
 
-1. **Back up all your current Enthusiast configurations, files, and databases first.**
-2. Take note of your database information in all your `config.php` files.
+1. **Back up all your current script configurations, files, and databases first.**
+2. Take note of your database and scripts settings in your `config.php` file.
 3. Download an archive - please choose appropriate link from the table above. Extract the archive.
-4. Replace your current `enthusiast/` files with the `public/enthusiast/` files from this repository. Make sure that you
+4. Replace your current `ninjalinks/` files with the `public/ninjalinks/` files from this repository. Make sure that you
    have all files from the folder uploaded.
-5. In every fanlisting folder, as well as in the enthusiast and collective folder, paste the `config.sample.php` file.
-   Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old
-   one. There are samplefl and samplecollective folders put to the archive right for that so please, make your FLs
-   consistent with those examples.
-
-Please follow the instructions carefully. A lot of issues were caused by users having incorrect config files.
+5. Open `config.sample.php`. Edit your database/scripts settings accordingly, and save it as `config.php` to overwrite your old
+   file.
+6. Run `admin/update-to-robotess-fork-1.0.php`. After successful run, remove the file.
 
 That's it! Should you encounter any problems, please create an
 issue [here](https://gitlab.com/tfl-php-scripts/ninja-links/-/issues), and I will try and solve it if I can. You can
-also report an issue via [contact form](http://contact.robotess.net?box=scripts&subject=Issue+with+Enthusiast). Please
-note that I don't support fresh installations, only those that were upgraded from old version.
+also report an issue via [contact form](http://contact.robotess.net?box=scripts&subject=Issue+with+NinjaLinks). Do not forget to include the logs.
