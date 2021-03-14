@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <head>
     <meta name="language" content="en"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>NinjaLinks Login Form</title>
+    <title>NinjaLinks Robotess Fork Login Form</title>
 </head>
 <body>
 <form method="post" action="login.php">
