@@ -265,7 +265,7 @@ function isBanned($email)
 {
     global $mysql, $dbpref;
 
-    $list = [];
+    $list = ['ip' => [], 'email' => []];
     $getbanned = $mysql->query("SELECT * FROM `" . $dbpref . "banned`");
     if ($mysql->count($getbanned)) {
         while ($r = $mysql->fetchAssoc($getbanned)) {
@@ -283,40 +283,9 @@ function isBanned($email)
         if (in_array($email, $list['email'])) {
             return true;
         }
-
-        return false;
-    } else {
-        return false;
-    }
-}
-
-function validateButton($button)
-{
-    global $opt;
-
-    $allowed = [".jpg", ".gif", ".png"];
-
-    if (filesize($button) > $opt['buttonsize']) {
-        $error[] = "Button larger than max file size";
-    } elseif (in_array(ext($button), $allowed)) {
-        $error[] = "Invalid file type";
     }
 
-    if (!$imginfo = @getimagesize($button)) {
-        $error[] = "Invalid file - images only.";
-    } elseif ($imginfo[0] > $opt['buttonmaxwidth']) {
-        $error[] = "Button too wide; max width: " . $opt['buttonmaxwidth'];
-    } elseif ($imginfo[1] > $opt['buttonmaxheight']) {
-        $error[] = "Button too high; max height: " . $opt['buttonmaxheight'];
-    } elseif ($imginfo[2] == 4) {
-        $error[] = "Only jpg, gif and png buttons are supported.";
-    }
-
-    if (!isset($error) || count($error) > 0) {
-        return $button;
-    }
-
-    return $error;
+    return false;
 }
 
 // GET FUNCTIONS
