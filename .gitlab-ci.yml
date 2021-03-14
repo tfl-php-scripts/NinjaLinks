@@ -11,7 +11,7 @@ static_analysis:
       - public/**/*
       - phpstan/**/*
       - phpstan-gitlab.neon
-      - phpstan-baseline.neon
+      - phpstan-baseline.neonown
       - .gitlab-ci.yml
   script:
     - apt-get update -yqq

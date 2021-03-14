@@ -53,5 +53,6 @@ $opt['required'] = ["email", "linkname", "linkurl", "linkcat"]; // required fiel
 
 $opt['cleanupdates'] = 1; // (1 = yes, 0 = no) remove HTML from updates in control panel; disable at your own risk
 
-// DO NOT REMOVE THIS ....
+// DO NOT REMOVE NEXT LINES ....
 require_once('functions.php');
+$mysql = new SQLConnection($dbhost, $dbuser, $dbpass, $dbname);

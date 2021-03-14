@@ -171,26 +171,6 @@ parameters:
 			path: public/ninjalinks/contact.php
 
 		-
-			message: "#^Variable \\$dbhost might not be defined\\.$#"
-			count: 1
-			path: public/ninjalinks/functions.php
-
-		-
-			message: "#^Variable \\$dbname might not be defined\\.$#"
-			count: 1
-			path: public/ninjalinks/functions.php
-
-		-
-			message: "#^Variable \\$dbpass might not be defined\\.$#"
-			count: 1
-			path: public/ninjalinks/functions.php
-
-		-
-			message: "#^Variable \\$dbuser might not be defined\\.$#"
-			count: 1
-			path: public/ninjalinks/functions.php
-
-		-
 			message: "#^Variable \\$opt might not be defined\\.$#"
 			count: 2
 			path: public/ninjalinks/header.php

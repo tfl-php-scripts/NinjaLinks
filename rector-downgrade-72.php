@@ -19,7 +19,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         __DIR__ . '/public/ninjalinks/inc/RobotessNet/Singleton.php',
         __DIR__ . '/public/ninjalinks/inc/RobotessNet/App.php',
         __DIR__ . '/public/ninjalinks/inc/RobotessNet/StringUtils.php',
-        __DIR__ . '/public/ninjalinks/config.php',
         __DIR__ . '/public/ninjalinks/functions.php',
     ]);
 
