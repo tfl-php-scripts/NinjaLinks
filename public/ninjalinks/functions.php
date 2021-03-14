@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\App;
+
 require_once('inc/RobotessNet/Autoloader.php');
 
 // IMPORTANT FUNCTIONS -- DO NOT EDIT
@@ -59,6 +61,11 @@ class SQLConnection
     public function fetchAssoc(mysqli_result $query): ?array
     {
         return mysqli_fetch_assoc($query);
+    }
+
+    public function error(): string
+    {
+        return mysqli_error($this->mysqli_connect);
     }
 }
 
@@ -475,6 +482,8 @@ function doEmail($recipient, $subject, $message, $xtraheaders = '')
     } else {
         $headers = "From: " . $opt['dirname'] . " <" . $opt['email'] . ">";
     }
+
+    $headers .= "\r\nPHP-Script: " . App::instance()->getFormed();
 
     $headers .= $xtraheaders;
 

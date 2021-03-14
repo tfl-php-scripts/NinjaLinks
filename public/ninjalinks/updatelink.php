@@ -77,7 +77,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 							`linktags` = '" . $linktags . "',
 							`category` = '" . (int)$linkcat . "',
 							`approved` = 0,
-							`dateupdated` = '" . TODAY . "'
+							`dateupdated` = NOW()
 						WHERE `id` = " . (int)$_GET['linkid'] . " LIMIT 1");
 
                         if ($editLink) {

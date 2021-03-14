@@ -43,7 +43,7 @@ switch (getView()) {
                     }
                 }
 
-                $addUpdate = $mysql->query("INSERT INTO `" . $dbpref . "updates` (`title`, `entry`, `datetime`) VALUES ('" . $title . "', '" . $entry . "', '" . TODAY . "')");
+                $addUpdate = $mysql->query("INSERT INTO `" . $dbpref . "updates` (`title`, `entry`) VALUES ('" . $title . "', '" . $entry . "')");
 
                 if ($addUpdate) {
                     echo '<p><b class="red">Note:</b> The update was successfully added. <a href="manage_updates.php">Return to Manage Updates</a>.</p>';

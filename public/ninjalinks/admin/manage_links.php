@@ -81,7 +81,7 @@ switch (getView()) {
 				`linktags` = '" . $linktags . "',
 				`category` = '" . (int)$linkcat . "',
 				`approved` = '" . (int)$approve . "',
-				`dateupdated` = '" . TODAY . "'
+				`dateupdated` = NOW()
 			WHERE `id` = " . (int)$_GET['id'] . " LIMIT 1");
 
                 if ($editLink) {

@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $cleanLinkTags = StringUtils::instance()->clean($_POST['linktags'] ?? '');
     if (count($errors) === 0) {
-        $addLink = $mysql->query("INSERT INTO `" . $dbpref . "links` (`ownername`, `owneremail`, `linkname`, `linkurl`, `linkbutton`, `linkdesc`, `linktags`, `category`, `approved`, `dateadded`) VALUES ('" . $cleanName . "', '" . $cleanEmail . "', '" . $cleanLinkName . "', '" . $cleanLinkUrl . "', '', '" . $cleanLinkDesc . "', '" . $cleanLinkTags . "', '" . $catId . "', 0, '" . TODAY . "')");
+        $addLink = $mysql->query("INSERT INTO `" . $dbpref . "links` (`ownername`, `owneremail`, `linkname`, `linkurl`, `linkbutton`, `linkdesc`, `linktags`, `category`, `approved`) VALUES ('" . $cleanName . "', '" . $cleanEmail . "', '" . $cleanLinkName . "', '" . $cleanLinkUrl . "', '', '" . $cleanLinkDesc . "', '" . $cleanLinkTags . "', '" . $catId . "', 0)");
         if ($addLink) {
             if ($opt['emailnew'] == 1) {
                 $message = "New link pending approval in " . html_entity_decode($opt['dirname']) . "\r\n\r\n";
