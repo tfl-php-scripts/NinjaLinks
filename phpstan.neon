@@ -1,0 +1,12 @@
+includes:
+	- phpstan-baseline.neon
+
+parameters:
+	bootstrapFiles:
+		- phpstan/constants.php
+	level: 2
+	excludePaths:
+		analyse:
+			- public/ninjalinks/config*.php
+	paths:
+		- public
