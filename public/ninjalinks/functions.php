@@ -71,7 +71,6 @@ class SQLConnection
 
 $mysql = new SQLConnection($dbhost, $dbuser, $dbpass, $dbname);
 
-
 define('TODAY', gmdate("Y-m-d H:i:s"));
 
 
