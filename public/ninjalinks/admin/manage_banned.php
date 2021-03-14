@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 include('header.php');
 $validtypes = ["ip", "email"];
 
@@ -30,20 +32,19 @@ switch (getView()) {
             if (!in_array($_POST['type'], $validtypes)) {
                 $error = "Invalid ban type; please try again.";
             }
-            if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/",
-                    $_POST['banvalue'])) {
+
+            $cleanType = StringUtils::instance()->cleanNormalize($_POST['type'] ?? '');
+            $cleanBanValue = StringUtils::instance()->cleanNormalize($_POST['banvalue'] ?? '');
+
+            if ($cleanType == "email" && !StringUtils::instance()->isEmailValid($cleanBanValue)) {
                 $error = "Ban value doesn't match legitimate e-mail address; please try again.";
-            } elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i',
-                    $_POST['banvalue'])) {
+            } elseif ($cleanType == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i',
+                    $cleanBanValue)) {
                 $error = "Ban value doesn't match legitimate IP address; please try again.";
             }
 
             if ($error == null) {
-                foreach ($_POST as $key => $value) {
-                    $$key = clean($value);
-                }
-
-                $addBan = $mysql->query("INSERT INTO `" . $dbpref . "banned` (`type`, `value`) VALUES ('" . $type . "', '" . $banvalue . "')");
+                $addBan = $mysql->query("INSERT INTO `" . $dbpref . "banned` (`type`, `value`) VALUES ('" .$cleanType . "', '" . $cleanBanValue . "')");
 
                 if ($addBan) {
                     echo '<p><b class="red">Note:</b> The ban was successfully added. <a href="manage_banned.php">Return to Manage Banned IPs/Emails</a>.</p>';
@@ -60,14 +61,14 @@ switch (getView()) {
         ?>
         <form action="manage_banned.php?v=add" method="post" id="linkform">
             <fieldset>
-                <label for="type">Update Title</label>
-                <select name="type" id="title">
+                <label for="type">Update Title*</label>
+                <select name="type" id="title" required>
                     <option value="ip">IP Address</option>
                     <option value="email">Email Address</option>
                 </select>
 
-                <label for="banvalue">Ban Value (IP/Email)</label>
-                <input type="text" name="banvalue" id="banvalue"/>
+                <label for="banvalue">Ban Value (IP/Email)*</label>
+                <input type="text" name="banvalue" id="banvalue" required/>
 
                 <input type="submit" name="submit" class="button" value="Add Ban"/>
             </fieldset>
@@ -90,22 +91,22 @@ switch (getView()) {
             if (!in_array($_POST['type'], $validtypes)) {
                 $error = "Invalid ban type; please try again.";
             }
-            if ($_POST['type'] == "email" && !preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/",
-                    $_POST['banvalue'])) {
+
+            $cleanType = StringUtils::instance()->cleanNormalize($_POST['type'] ?? '');
+            $cleanBanValue = StringUtils::instance()->cleanNormalize($_POST['banvalue'] ?? '');
+
+            if ($cleanType == "email" && !StringUtils::instance()->isEmailValid($cleanBanValue)) {
                 $error = "Ban value doesn't match legitimate e-mail address; please try again.";
-            } elseif ($_POST['type'] == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i',
-                    $_POST['banvalue'])) {
+            } elseif ($cleanType == "ip" && !preg_match('/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/i',
+                    $cleanBanValue)) {
                 $error = "Ban value doesn't match legitimate IP address; please try again.";
             }
 
             if ($error == null) {
-                foreach ($_POST as $key => $value) {
-                    $$key = clean($value);
-                }
 
                 $editBan = $mysql->query("UPDATE `" . $dbpref . "banned` SET
-				`type` = '" . $type . "',
-				`value` = '" . $banvalue . "'
+				`type` = '" . $cleanType . "',
+				`value` = '" . $cleanBanValue . "'
 			WHERE `id` = " . (int)$_GET['id'] . " LIMIT 1");
 
                 if ($editBan) {
@@ -128,8 +129,8 @@ switch (getView()) {
                 <fieldset>
                     <input type="hidden" name="banid" id="banid" value="<?= md5($opt['salt'] . $ban['id']) ?>"/>
 
-                    <label for="type">Update Title</label>
-                    <select name="type" id="type">
+                    <label for="type">Update Title*</label>
+                    <select name="type" id="type" required>
                         <option value="ip"<?php if ($ban['type'] == "ip") {
                             echo ' selected="selected"';
                         } ?>>IP Address
@@ -140,8 +141,8 @@ switch (getView()) {
                         </option>
                     </select>
 
-                    <label for="banvalue">Ban Value (IP/Email)</label>
-                    <input type="text" name="banvalue" id="banvalue" value="<?= $ban['value'] ?>"/>
+                    <label for="banvalue">Ban Value (IP/Email)*</label>
+                    <input type="text" name="banvalue" id="banvalue" value="<?= $ban['value'] ?>" required/>
 
                     <input type="submit" name="submit" class="button" value="Edit Ban"/>
                 </fieldset>

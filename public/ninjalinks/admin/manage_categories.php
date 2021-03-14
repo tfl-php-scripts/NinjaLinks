@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 include('header.php');
 
 switch (getView()) {
@@ -32,13 +34,13 @@ switch (getView()) {
                 $error = "Must enter a Category Name";
             } elseif (preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['catname'])) {
                 $error = "Category Name contains invalid characters, please fix and try again.";
-            } elseif ($mysql->single("SELECT `id` FROM `" . $dbpref . "categories` WHERE `catname` = '" . clean($_POST['catname']) . "' LIMIT 1")) {
+            } elseif ($mysql->single("SELECT `id` FROM `" . $dbpref . "categories` WHERE `catname` = '" . StringUtils::instance()->clean($_POST['catname']) . "' LIMIT 1")) {
                 $error = "A category with that name already exists.";
             }
 
             if ($error == null) {
                 foreach ($_POST as $key => $value) {
-                    $$key = clean($value);
+                    $$key = StringUtils::instance()->clean($value);
                 }
 
                 $addCat = $mysql->query("INSERT INTO `" . $dbpref . "categories` (`catname`, `catparent`) VALUES ('" . $catname . "', '" . (int)$catparent . "')");
@@ -58,11 +60,11 @@ switch (getView()) {
         ?>
         <form action="manage_categories.php?v=add" method="post" id="linkform">
             <fieldset>
-                <label for="catname">Category Name</label>
-                <input type="text" name="catname" id="catname"/>
+                <label for="catname">Category Name*</label>
+                <input type="text" name="catname" id="catname" required/>
 
-                <label for="catparent">Parent Category</label>
-                <select name="catparent" id="catparent">
+                <label for="catparent">Parent Category*</label>
+                <select name="catparent" id="catparent" required>
                     <option value="0">None</option>
                     <?php
                     getAllCats('dropdown', '&nbsp;&nbsp;', null, 1);
@@ -95,7 +97,7 @@ switch (getView()) {
 
             if ($error == null) {
                 foreach ($_POST as $key => $value) {
-                    $$key = clean($value);
+                    $$key = StringUtils::instance()->clean($value);
                 }
 
                 $editCat = $mysql->query("UPDATE `" . $dbpref . "categories` SET

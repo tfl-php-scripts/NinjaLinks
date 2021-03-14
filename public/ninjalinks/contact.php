@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 require('config.php');
 include('header.php');
 
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $karma += 4;
     }
 
-    $_POST['email'] = strtolower($_POST['email']);
+    $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
 
     if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['comments'])) {
         $error_msg .= "Name, e-mail and comments are required fields. \n";
@@ -55,8 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error_msg .= "The name field is limited at 15 characters. Your first name or nickname will do! \n";
     } elseif (!preg_match("/^[A-Za-z' -]*$/", $_POST['name'])) {
         $error_msg .= "The name field must not contain special characters. \n";
-    } elseif (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$/i",
-        $_POST['email'])) {
+    } elseif (!StringUtils::instance()->isEmailValid($cleanEmail)) {
         $error_msg .= "That is not a valid e-mail address. \n";
     } elseif (!empty($_POST['url']) && !preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i',
             $_POST['url'])) {
@@ -68,23 +69,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     if ($error_msg == null) {
+
+        $cleanName = StringUtils::instance()->clean($_POST['name'] ?? '');
+        $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
+        $cleanUrl = StringUtils::instance()->clean($_POST['url'] ?? '');
+        $cleanComments = StringUtils::instance()->clean($_POST['comments'] ?? '');
+
         foreach ($_POST as $key => $val) {
-            $$key = clean($val, 'no');
+            $$key = StringUtils::instance()->clean($val);
         }
 
         $message = "You received this e-mail message through your directory: \r\n\r\n";
 
-        $message .= "Name: " . $name . "\r\n";
-        $message .= "E-mail: " . $email . "\r\n";
-        $message .= "Website: " . $url . "\r\n";
-        $message .= "Comments: " . $comments . "\r\n\r\n";
+        $message .= "Name: " . $cleanName . "\r\n";
+        $message .= "E-mail: " . $cleanEmail . "\r\n";
+        $message .= "Website: " . $cleanUrl . "\r\n";
+        $message .= "Comments: " . $cleanComments . "\r\n\r\n";
 
         $message .= "Message Info\r\n";
         $message .= "Date: " . TODAY . "\r\n";
         $message .= "IP: " . $_SERVER['REMOTE_ADDR'] . "\r\n";
         $message .= "Browser: " . $_SERVER['HTTP_USER_AGENT'];
 
-        if (doEmail($opt['email'], "Mail From " . $opt['dirname'], $message, "\r\nReply-To: " . $email)) {
+        if (doEmail($opt['email'], "Mail From " . $opt['dirname'], $message, "\r\nReply-To: " . $cleanEmail)) {
             echo "<p>Your mail was successfully sent.</p>";
         } else {
             echo "<p>Your mail could not be sent this time.</p>";
@@ -101,16 +108,16 @@ if ($error_msg != null) {
 
     <form action="contact.php" method="post" id="linkform">
         <fieldset>
-            <label for="name">Name</label>
+            <label for="name">Name*</label>
             <input type="text" name="name" id="name" value="" required/>
 
-            <label for="email">E-mail</label>
+            <label for="email">E-mail*</label>
             <input type="email" name="email" id="email" value="" required/>
 
             <label for="url">Website</label>
             <input type="url" name="url" id="url" value=""/>
 
-            <label for="comments">Comments</label>
+            <label for="comments">Comments*</label>
             <textarea name="comments" id="comments" required></textarea>
 
             <input type="submit" name="submit" id="submit" class="button" value="Send"/>

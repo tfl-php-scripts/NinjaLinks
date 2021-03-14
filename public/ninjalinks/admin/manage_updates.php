@@ -12,6 +12,8 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\StringUtils;
+
 include('header.php');
 
 switch (getView()) {
@@ -37,7 +39,7 @@ switch (getView()) {
                     if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0) {
                         $$key = escape($value);
                     } else {
-                        $$key = clean($value);
+                        $$key = StringUtils::instance()->clean($value);
                     }
                 }
 
@@ -58,8 +60,8 @@ switch (getView()) {
         ?>
         <form action="manage_updates.php?v=add" method="post" id="linkform">
             <fieldset>
-                <label for="title">Update Title</label>
-                <input type="text" name="title" id="title"/>
+                <label for="title">Update Title*</label>
+                <input type="text" name="title" id="title" required/>
 
                 <label for="entry">Entry</label>
                 <textarea name="entry" id="entry" rows="10" cols="5"></textarea>
@@ -91,7 +93,7 @@ switch (getView()) {
                     if (isset($opt['cleanupdates']) && $opt['cleanupdates'] == 0) {
                         $$key = escape($value);
                     } else {
-                        $$key = clean($value);
+                        $$key = StringUtils::instance()->clean($value);
                     }
                 }
 
@@ -120,8 +122,8 @@ switch (getView()) {
                 <fieldset>
                     <input type="hidden" name="updid" id="updid" value="<?= md5($opt['salt'] . $up['id']) ?>"/>
 
-                    <label for="title">Update Title</label>
-                    <input type="text" name="title" id="title" value="<?= $up['title'] ?>"/>
+                    <label for="title">Update Title*</label>
+                    <input type="text" name="title" id="title" value="<?= $up['title'] ?>" required/>
 
                     <label for="entry">Entry</label>
                     <textarea name="entry" id="entry" rows="10" cols="5"><?= $up['entry'] ?></textarea>

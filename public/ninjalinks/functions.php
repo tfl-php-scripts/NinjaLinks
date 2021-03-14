@@ -69,17 +69,6 @@ define('TODAY', gmdate("Y-m-d H:i:s"));
 
 
 // DATA MANIPULATION AND VALIDATION FUNCTIONS
-function clean($input, $fordb = 'yes')
-{
-    $input = str_replace("<3", "&lt;3", $input);
-    $input = htmlentities(strip_tags(urldecode($input)), ENT_NOQUOTES, 'UTF-8');
-
-    if ($fordb == "yes") {
-        $input = escape($input);
-    }
-
-    return trim($input);
-}
 
 function escape($input)
 {
@@ -350,7 +339,7 @@ function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected =
     $meow = $mysql->query("SELECT `catparent`, `catname`, `" . $dbpref . "categories`.`id` as `catid`, COUNT(`" . $dbpref . "links`.`id`) AS `linkcount` FROM `" . $dbpref . "categories` LEFT JOIN `" . $dbpref . "links` ON `" . $dbpref . "categories`.`id` = `" . $dbpref . "links`.`category` GROUP BY `" . $dbpref . "categories`.`id` ORDER BY `catparent`, `catname`");
     while ($row = $mysql->fetchAssoc($meow)) {
         if ($row['catparent'] == 0) {
-            $cats[$row['catid']] = ['name' => $row['catname'], 'subcats' => "", 'linkcount' => $row['linkcount']];
+            $cats[$row['catid']] = ['name' => $row['catname'], 'subcats' => [], 'linkcount' => $row['linkcount']];
         } else {
             $cats[$row['catparent']]['subcats'][$row['catid']] = ['name' => $row['catname']];
         }
@@ -408,6 +397,8 @@ function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected =
 function getLinks($offset, $limit, $category)
 {
     global $mysql, $opt, $dbpref;
+
+    echo '<!-- Enthusiast [Robotess Fork] v. 1.0.6 (Beta) Join Form -->';
 
     $buildQuery = "SELECT `" . $dbpref . "links`.*, `" . $dbpref . "categories`.`catname` FROM `" . $dbpref . "links` LEFT JOIN `" . $dbpref . "categories` ON `" . $dbpref . "links`.`category` = `" . $dbpref . "categories`.`id` WHERE `" . $dbpref . "links`.`approved` = 1";
     if ($category != "all") {
@@ -573,6 +564,7 @@ function isInstalled()
 
 function checkInstall()
 {
+    echo '<!-- '. RobotessNet\App::instance()->getFormed() .' -->';
     if (!isInstalled()) {
         doError('not-installed');
     } elseif (file_exists("install.php")) {

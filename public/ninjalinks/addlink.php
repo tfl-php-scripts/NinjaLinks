@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     if ($opt['allowdupes'] == 0 && !empty($_POST['linkurl'])) {
-        $findLink = $mysql->query("SELECT * FROM `" . $dbpref . "links` WHERE `linkurl` LIKE '%" . clean($_POST['linkurl']) . "%' LIMIT 1");
+        $findLink = $mysql->query("SELECT * FROM `" . $dbpref . "links` WHERE `linkurl` LIKE '%" . StringUtils::instance()->clean($_POST['linkurl']) . "%' LIMIT 1");
         if ($mysql->count($findLink) == 1) {
             $errors['dupelinkurl'] = "Duplicate link detected - please only add your website once.";
         }
@@ -159,40 +159,46 @@ global $opt;
 ?>
     <form action="addlink.php" method="post" id="linkform">
         <fieldset>
-            <label for="ownername">Your Name</label>
+            <label for="ownername">Your Name<?= in_array('ownername',
+                    $opt['required'], true) ? '*' : '' ?></label>
             <input type="text" name="ownername" id="ownername"
                    value="<?= $cleanName ?? ''; ?>" <?= in_array('ownername',
                 $opt['required'], true) ? ' required' : '' ?>/>
 
-            <label for="email">E-mail Address</label>
+            <label for="email">E-mail Address<?= in_array('email',
+                    $opt['required'], true) ? '*' : '' ?></label>
             <input type="email" name="email" id="email" value="<?= $cleanEmail ?? ''; ?>" <?= in_array('email',
                 $opt['required'], true) ? ' required' : '' ?>/>
 
-            <label for="linkname">Link Name</label>
+            <label for="linkname">Link Name<?= in_array('linkname',
+                    $opt['required'], true) ? '*' : '' ?></label>
             <input type="text" name="linkname" id="linkname"
                    value="<?= $cleanLinkName ?? ''; ?>" <?= in_array('linkname',
                 $opt['required'], true) ? ' required' : '' ?>/>
 
-            <label for="linkurl">Link URL</label>
+            <label for="linkurl">Link URL<?= in_array('linkurl',
+                    $opt['required'], true) ? '*' : '' ?></label>
             <input type="url" name="linkurl" id="linkurl"
                    value="<?= $cleanLinkUrl ?? ''; ?>" <?= in_array('linkurl',
                 $opt['required'], true) ? ' required' : '' ?>/>
 
             <?php if (isset($opt['allowdesc']) && $opt['allowdesc'] == 1) : ?>
-                <label for="linkdesc">Link Description</label>
+                <label for="linkdesc">Link Description<?= in_array('linkdesc',
+                        $opt['required'], true) ? '*' : '' ?></label>
                 <textarea name="linkdesc" id="linkdesc" rows="10"
                           cols="5" <?= in_array('linkdesc',
                     $opt['required'], true) ? ' required' : '' ?>><?= $cleanLinkDesc ?? ''; ?></textarea>
             <?php endif; ?>
 
             <?php if (isset($opt['allowtags']) && $opt['allowtags'] == 1) : ?>
-                <label for="linktags">Link Tags</label>
+                <label for="linktags">Link Tags<?= in_array('linktags',
+                        $opt['required'], true) ? '*' : '' ?></label>
                 <input type="text" name="linktags" id="linktags"
                        value="<?= $cleanLinkTags ?? ''; ?>" <?= in_array('linktags',
                     $opt['required'], true) ? ' required' : '' ?>/>
             <?php endif; ?>
 
-            <label for="linkcat">Link Category</label>
+            <label for="linkcat">Link Category*</label>
             <select name="linkcat" id="linkcat" required>
                 <?php
                 getAllCats('dropdown', '&nbsp;&nbsp;', $catId);
