@@ -1,0 +1,237 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 9
+			path: public/ninjalinks/addlink.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/addlink.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/addlink.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/header.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 5
+			path: public/ninjalinks/admin/login.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 7
+			path: public/ninjalinks/admin/manage_banned.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 5
+			path: public/ninjalinks/admin/manage_banned.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 8
+			path: public/ninjalinks/admin/manage_banned.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 7
+			path: public/ninjalinks/admin/manage_categories.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 7
+			path: public/ninjalinks/admin/manage_categories.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 9
+			path: public/ninjalinks/admin/manage_categories.php
+
+		-
+			message: "#^Variable \\$catname might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_categories.php
+
+		-
+			message: "#^Variable \\$catparent might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_categories.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 12
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 14
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 6
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$ownername might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$email might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$linkname might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$linkurl might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$linktags might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$linkcat might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$approve might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$status might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_links.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 7
+			path: public/ninjalinks/admin/manage_updates.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 5
+			path: public/ninjalinks/admin/manage_updates.php
+
+		-
+			message: "#^Variable \\$entry might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_updates.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 8
+			path: public/ninjalinks/admin/manage_updates.php
+
+		-
+			message: "#^Variable \\$title might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/manage_updates.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/admin/update-to-robotess-fork-1.0.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 4
+			path: public/ninjalinks/admin/update-to-robotess-fork-1.0.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/click.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 4
+			path: public/ninjalinks/click.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/contact.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/header.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/index.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/links.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/links.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/links.php
+
+		-
+			message: "#^Variable \\$dbpref might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 7
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$opt might not be defined\\.$#"
+			count: 9
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$ownername might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$email might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$linkname might not be defined\\.$#"
+			count: 3
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$linkurl might not be defined\\.$#"
+			count: 2
+			path: public/ninjalinks/updatelink.php
+
+		-
+			message: "#^Variable \\$linkcat might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/updatelink.php
+
