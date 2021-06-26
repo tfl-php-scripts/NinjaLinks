@@ -14,7 +14,6 @@ This version requires at least PHP 7.2 and MySQLi extension turned on (tested on
 | 7.2 | + |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)|
 | 7.3 | + |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)| 
 | 7.4 | + |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/ninja-links/-/archive/master/ninja-links-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/ninja-links/php74-master.zip))|
-| 8.0 | ? |-|
 
 Changes are available in [changelog](https://gitlab.com/tfl-php-scripts/ninja-links/-/blob/master/CHANGELOG.md).
 
