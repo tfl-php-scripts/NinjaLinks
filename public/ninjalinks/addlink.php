@@ -45,36 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $karma += spamCount($value) * 2;
     }
 
+    $cleanLinkDesc = StringUtils::instance()->clean($_POST['linkdesc'] ?? '');
     $cleanName = StringUtils::instance()->clean($_POST['ownername'] ?? '');
     $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
     $cleanLinkName = StringUtils::instance()->clean($_POST['linkname'] ?? '');
     $cleanLinkUrl = StringUtils::instance()->clean($_POST['linkurl'] ?? '');
-    $cleanLinkDesc = StringUtils::instance()->clean($_POST['linkdesc'] ?? '');
-
-    if (isset($_POST['linkdesc']) && strcasecmp(trim($_POST['linkdesc']), '') !== 0) {
-        $karma += exploitKarma($_POST['linkdesc']);
-    }
-
-    if (isset($_POST['email']) && strcasecmp(trim($_POST['email']), '') !== 0) {
-        $karma += badMailKarma($_POST['email']);
-    }
-
-    if (strcasecmp(trim($_POST['linkdesc']), '') !== 0 && preg_match("/(<.*>)/i", $_POST['linkdesc'])) {
-        $karma += 2;
-    }
-    if (strcasecmp(trim($_POST['ownername']),
-            '') !== 0 && (strlen($_POST['ownername']) < 3 || strlen($_POST['ownername']) > 15)) {
-        $karma += 2;
-    }
-    if (strcasecmp(trim($_POST['linkurl']), '') !== 0 && strlen($_POST['linkurl']) > 30) {
-        $karma += 2;
-    }
-    if (strcasecmp(trim($_POST['linkdesc']), '') !== 0 && substr_count($_POST['linkdesc'], 'http') >= 1) {
-        $karma += 2;
-    }
-    if (strcasecmp(trim($_POST['linkdesc']), '') !== 0 && substr_count($_POST['linkdesc'], 'http') >= 3) {
-        $karma += 4;
-    }
 
     if (!isset($errors['ownername']) && preg_match("/[\^<,\"@\/\{\}\(\)\*\$%\?=>:\|;#]+/i", $_POST['ownername'])) {
         $errors['ownername'] = "Name contains invalid characters. Please fix and try again.";
@@ -131,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                 $message .= "Submission info:\r\n";
                 $message .= "Date: " . TODAY . "\r\n";
-                $message .= "Karma: " . $karma . "\r\n";
                 $message .= "User IP: " . $_SERVER['REMOTE_ADDR'] . "\r\n";
                 $message .= "Browser: " . $_SERVER['HTTP_USER_AGENT'];
 
@@ -155,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         echo '<p class="red">' . implode('<br/>', $errors) . '</p>';
     }
 }
+echo '<!-- ' . RobotessNet\App::instance()->getFormed() . ' -->';
 global $opt;
 ?>
     <form action="addlink.php" method="post" id="linkform">

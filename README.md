@@ -11,10 +11,10 @@ This version requires at least PHP 7.2 and MySQLi extension turned on (tested on
 
 | PHP version | Supported by the script | Link to download |
 |------------------------------------------|-------------------------|---------------------|
-| 7.2 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)|
-| 7.3 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)| 
-| 7.4 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/ninja-links/-/archive/master/ninja-links-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/ninja-links/php74-master.zip))|
-| 8.0 | :grey_question: |-|
+| 7.2 | + |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)|
+| 7.3 | + |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/ninja-links/php72-php73-master.zip)| 
+| 7.4 | + |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/ninja-links/-/archive/master/ninja-links-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/ninja-links/php74-master.zip))|
+| 8.0 | ? |-|
 
 Changes are available in [changelog](https://gitlab.com/tfl-php-scripts/ninja-links/-/blob/master/CHANGELOG.md).
 
@@ -31,7 +31,7 @@ If you are using NinjaLinks 1.1 (old version by Jem) or [Robotess Fork] 1.* (my 
    have all files from the folder uploaded.
 5. Open `config.sample.php`. Edit your database/scripts settings accordingly, and save it as `config.php` to overwrite your old
    file.
-6. Run `admin/update-to-robotess-fork-1.0.php`. After successful run, remove the file.
+6. Run `admin/update-to-robotess-fork-1.1.php`. After successful run, remove the file.
 
 That's it! Should you encounter any problems, please create an
 issue [here](https://gitlab.com/tfl-php-scripts/ninja-links/-/issues), and I will try and solve it if I can. You can

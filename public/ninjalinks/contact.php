@@ -30,25 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $karma += spamCount($value) * 2;
     }
 
-    $karma += exploitKarma($_POST['comments']);
-    $karma += badMailKarma($_POST['email']);
-
-    if (!empty($_POST['comments']) && preg_match("/(<.*>)/i", $_POST['comments'])) {
-        $karma += 2;
-    }
-    if (!empty($_POST['name']) && (strlen($_POST['name']) < 3 || strlen($_POST['name']) > 15)) {
-        $karma += 2;
-    }
-    if (strlen($_POST['url']) > 30) {
-        $karma += 2;
-    }
-    if (!empty($_POST['comments']) && substr_count($_POST['comments'], 'http') >= 1) {
-        $karma += 2;
-    }
-    if (!empty($_POST['comments']) && substr_count($_POST['comments'], 'http') >= 3) {
-        $karma += 4;
-    }
-
     $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
 
     if (empty($_POST['name']) || empty($_POST['email']) || empty($_POST['comments'])) {
@@ -68,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $error_msg = "Your message seems awfully spammy, and has been rejected. \n";
     }
 
-    if ($error_msg == null) {
+    if ($error_msg === null) {
 
         $cleanName = StringUtils::instance()->clean($_POST['name'] ?? '');
         $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
@@ -98,8 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         }
     }
 }
+echo '<!-- ' . RobotessNet\App::instance()->getFormed() . ' -->';
 
-if ($error_msg != null) {
+if ($error_msg !== null) {
     echo "<p><strong style='color: red;'>ERROR:</strong><br />";
     echo nl2br($error_msg) . "</p>";
 }

@@ -19,23 +19,50 @@ require_once('inc/RobotessNet/Autoloader.php');
 // IMPORTANT FUNCTIONS -- DO NOT EDIT
 class SQLConnection
 {
-    private mysqli $mysqli_connect;
+    private mysqli $mysqliConnect;
+    private bool $reportErrors;
 
-    public function __construct($host, $user, $pass, $dbnm)
+    public function __construct($host, $user, $pass, $dbnm, ?int $showDbErrors = 0)
     {
-        $this->mysqli_connect = mysqli_connect($host, $user, $pass) or doError('no-connect');
-        $select = mysqli_select_db($this->mysqli_connect, $dbnm) or doError('no-select-db');
+        $mysqliConnect = mysqli_connect($host, $user, $pass);
+        if ($mysqliConnect === false) {
+            doError('no-connect', mysqli_connect_error());
+            return;
+        }
+        $this->mysqliConnect = $mysqliConnect;
+
+        $select = mysqli_select_db($this->mysqliConnect, $dbnm) or doError('no-select-db');
+
+        $this->reportErrors = $showDbErrors === 1;
+        if ($this->reportErrors) {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        }
 
         $this->query("SET NAMES 'utf8'");
     }
 
-    public function query($query)
+    public static function instance($host, $user, $pass, $dbnm, ?int $showDbErrors = 0): self
     {
-        $result = mysqli_query($this->mysqli_connect, $query);
-        if ($result === false) {
-            doError('query-fail');
-        }
+        return new self($host, $user, $pass, $dbnm, $showDbErrors);
+    }
 
+    public function setReportErrors(bool $reportErrors): self
+    {
+        $this->reportErrors = $reportErrors;
+        return $this;
+    }
+
+    public function isReportErrors(): bool
+    {
+        return $this->reportErrors;
+    }
+
+    public function query($query, bool $breakIfError = true)
+    {
+        $result = mysqli_query($this->mysqliConnect, $query);
+        if ($result === false && $breakIfError) {
+            doError('query-fail', $this->error());
+        }
         return $result;
     }
 
@@ -43,7 +70,7 @@ class SQLConnection
     {
         $result = $this->query($query);
         if ($result === false) {
-            exit('Could not run query: ' . mysqli_error($this->mysqli_connect));
+            doError('query-fail', $this->error());
         }
         $array = mysqli_fetch_array($result);
         return $array[0] ?? null;
@@ -65,7 +92,7 @@ class SQLConnection
 
     public function error(): string
     {
-        return mysqli_error($this->mysqli_connect);
+        return mysqli_error($this->mysqliConnect);
     }
 }
 
@@ -235,36 +262,6 @@ function spamCount($input)
     return count($compare);
 }
 
-function exploitKarma($input)
-{
-    $tempKarma = 0;
-
-    $exploits = ["content-type", "bcc:", "cc:", "document.cookie", "onclick", "onload", "javascript"];
-    foreach ($exploits as $exploit) {
-        if (!empty($input) && stripos($input, $exploit) !== false) {
-            $tempKarma += 2;
-        }
-    }
-
-    return $tempKarma;
-}
-
-function badMailKarma($input)
-{
-    $tempKarma = 0;
-
-    $badmails = ["mail.ru", "hotsheet.com", "ibizza.com", "aeekart.com", "fooder.com", "yahone.com"];
-    $expodedArray = explode("@", $input);
-    $domain = array_pop($expodedArray);
-    foreach ($badmails as $ext) {
-        if ($domain == $ext) {
-            $tempKarma += 2;
-        }
-    }
-
-    return $tempKarma;
-}
-
 function isBanned($email)
 {
     global $mysql, $dbpref;
@@ -290,12 +287,6 @@ function isBanned($email)
     }
 
     return false;
-}
-
-// GET FUNCTIONS
-function ext($file)
-{
-    return strrchr($file, ".");
 }
 
 function getAllCats($display = 'dropdown', $spacer = '&nbsp;&nbsp;', $selected = null, $level = 2)
@@ -371,7 +362,7 @@ function getLinks($offset, $limit, $category)
 {
     global $mysql, $opt, $dbpref;
 
-    echo '<!-- Enthusiast [Robotess Fork] v. 1.0.6 (Beta) Join Form -->';
+    echo '<!-- ' . RobotessNet\App::instance()->getFormed() . ' -->';
 
     $buildQuery = "SELECT `" . $dbpref . "links`.*, `" . $dbpref . "categories`.`catname` FROM `" . $dbpref . "links` LEFT JOIN `" . $dbpref . "categories` ON `" . $dbpref . "links`.`category` = `" . $dbpref . "categories`.`id` WHERE `" . $dbpref . "links`.`approved` = 1";
     if ($category != "all") {
@@ -539,7 +530,6 @@ function isInstalled()
 
 function checkInstall()
 {
-    echo '<!-- '. RobotessNet\App::instance()->getFormed() .' -->';
     if (!isInstalled()) {
         doError('not-installed');
     } elseif (file_exists("install.php")) {
@@ -547,7 +537,7 @@ function checkInstall()
     }
 }
 
-function doError($errorID)
+function doError($errorID, $errorStr = null)
 {
     // at some point I shall set this up to do something with $details - store or w/e
 
@@ -572,7 +562,7 @@ function doError($errorID)
             break;
     }
 
-    echo '<p style="background: #fff; color: #f00; font-weight: bold;">Error: ' . $displaymsg . '</p>';
+    echo '<p style="background: #fff; color: #f00; font-weight: bold;">Error: ' . $displaymsg . ' (' . ($errorStr ?? '') . ')</p>';
     include('footer.php');
     exit;
 }

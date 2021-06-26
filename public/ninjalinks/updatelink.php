@@ -23,19 +23,22 @@ include('header.php');
 <?php
 if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
     if (isset($_GET['key']) && strlen($_GET['key']) == 32) {
+        $cleanKey = StringUtils::instance()->clean($_GET['key'] ?? '');
+
         $findLink = $mysql->query("SELECT * FROM `" . $dbpref . "links` WHERE `id` = '" . (int)$_GET['linkid'] . "'");
         if ($mysql->count($findLink) > 0) {
             $link = $mysql->fetchAssoc($findLink);
-            if ($_GET['key'] == md5($link['linkname'] . $link['owneremail'] . date("Y-m-d"))) {
+            if ($cleanKey === md5($link['linkname'] . $link['owneremail'] . date("Y-m-d"))) {
                 if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     $error = null;
 
                     // check the POSTed md5 hash of salt + link id against the hash of salt plus GET id (if the GET has been tampered with, will fail)
-                    if ($_POST['linkid'] != md5($_GET['key'] . $_GET['linkid'])) {
+                    if ($_POST['linkid'] != md5($cleanKey . $_GET['linkid'])) {
                         exit('<p>Link IDs do not match</p>');
                     }
 
                     foreach ($_POST as $key => $value) {
+                        // empty is not working nice with zeroes
                         if (in_array($key, $opt['required']) && empty($value)) {
                             $error = $key . ' is a required field.';
                         }
@@ -59,23 +62,24 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                             $$key = StringUtils::instance()->clean($value);
                         }
 
-                        if (!isset($linktags)) {
-                            $linktags = null;
-                        }
-
-                        if (!isset($linkdesc)) {
-                            $linkdesc = null;
-                        }
+                        $cleanName = StringUtils::instance()->clean($_POST['ownername'] ?? '');
+                        $cleanEmail = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
+                        $cleanLinkName = StringUtils::instance()->clean($_POST['linkname'] ?? '');
+                        $cleanLinkUrl = StringUtils::instance()->clean($_POST['linkurl'] ?? '');
+                        $cleanLinkCatId = (int)StringUtils::instance()->clean($_POST['linkcat'] ?? '');
+                        
+                        $cleanLinkDesc = StringUtils::instance()->cleanIfNotNull($_POST['linkdesc'] ?? '');
+                        $cleanLinkTags = StringUtils::instance()->cleanIfNotNull($_POST['linktags'] ?? '');
 
                         $editLink = $mysql->query("UPDATE `" . $dbpref . "links` SET
-							`ownername` = '" . $ownername . "',
-							`owneremail` = '" . strtolower($email) . "',
-							`linkname` = '" . $linkname . "',
-							`linkurl` = '" . $linkurl . "', 
+							`ownername` = '" . $cleanName . "',
+							`owneremail` = '" . $cleanEmail . "',
+							`linkname` = '" . $cleanLinkName . "',
+							`linkurl` = '" . $cleanLinkUrl . "', 
 							`linkbutton` = '',
-							`linkdesc` = '" . $linkdesc . "',
-							`linktags` = '" . $linktags . "',
-							`category` = '" . (int)$linkcat . "',
+							`linkdesc` = '" . $cleanLinkDesc . "',
+							`linktags` = '" . $cleanLinkTags . "',
+							`category` = '" . $cleanLinkCatId . "',
 							`approved` = 0,
 							`dateupdated` = NOW()
 						WHERE `id` = " . (int)$_GET['linkid'] . " LIMIT 1");
@@ -83,11 +87,11 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         if ($editLink) {
                             $message = "Edited link pending approval in " . $opt['dirname'] . "\r\n\r\n";
 
-                            $message .= "Owner: " . $ownername . " (" . $email . ")\r\n";
-                            $message .= "Site Name: " . $linkname . "\r\n";
-                            $message .= "Site URL: " . strtolower($linkurl) . "\r\n";
-                            $message .= "Link Tags: " . $linktags . "\r\n";
-                            $message .= "Description: " . $linkdesc . "\r\n\r\n";
+                            $message .= "Owner: " . $cleanName . " (" . $cleanEmail . ")\r\n";
+                            $message .= "Site Name: " . $cleanLinkName . "\r\n";
+                            $message .= "Site URL: " . $cleanLinkUrl . "\r\n";
+                            $message .= "Link Tags: " . $cleanLinkTags . "\r\n";
+                            $message .= "Description: " . $cleanLinkDesc . "\r\n\r\n";
 
                             $message .= "You must approve this link before it will re-appear in your directory.\r\n";
                             $message .= $opt['dirlink'] . "admin/manage_links.php\r\n\r\n";
@@ -97,7 +101,7 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                             $message .= "User IP: " . $_SERVER['REMOTE_ADDR'] . "\r\n";
                             $message .= "Browser: " . $_SERVER['HTTP_USER_AGENT'];
 
-                            doEmail($opt['email'], "Link '" . $linkname . "' Edited", $message);
+                            doEmail($opt['email'], "Link '" . $cleanLinkName . "' Edited", $message);
 
                             echo '<p><b class="red">Note:</b> The link was successfully edited and is now awaying re-approval.</p>';
                         } else {
@@ -105,23 +109,32 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         }
                     }
                 }
+                echo '<!-- '. RobotessNet\App::instance()->getFormed() .' -->';
                 ?>
-                <form action="updatelink.php?linkid=<?= (int)$_GET['linkid'] ?>&amp;key=<?= $_GET['key'] ?>"
+                <form action="updatelink.php?linkid=<?= (int)$_GET['linkid'] ?>&amp;key=<?= $cleanKey ?>"
                       method="post" id="linkform">
                     <fieldset>
-                        <input type="hidden" name="linkid" id="linkid" value="<?= md5($_GET['key'] . $link['id']) ?>"/>
+                        <input type="hidden" name="linkid" id="linkid" value="<?= md5($cleanKey . $link['id']) ?>"/>
 
-                        <label for="ownername">Your Name</label>
-                        <input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>"/>
+                        <label for="ownername">Your Name<?= in_array('ownername',
+                                $opt['required'], true) ? '*' : '' ?></label>
+                        <input type="text" name="ownername" id="ownername" value="<?= $link['ownername'] ?>"<?= in_array('ownername',
+                            $opt['required'], true) ? ' required' : '' ?>/>
 
-                        <label for="email">E-mail Address</label>
-                        <input type="email" name="email" id="email" value="<?= $link['owneremail'] ?>"/>
+                        <label for="email">E-mail Address<?= in_array('email',
+                                $opt['required'], true) ? '*' : '' ?></label>
+                        <input type="email" name="email" id="email" value="<?= $link['owneremail'] ?>"<?= in_array('email',
+                            $opt['required'], true) ? ' required' : '' ?>/>
 
-                        <label for="linkname">Link Name</label>
-                        <input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>"/>
+                        <label for="linkname">Link Name<?= in_array('linkname',
+                                $opt['required'], true) ? '*' : '' ?></label>
+                        <input type="text" name="linkname" id="linkname" value="<?= $link['linkname'] ?>"<?= in_array('linkname',
+                            $opt['required'], true) ? ' required' : '' ?>/>
 
-                        <label for="linkurl">Link URL</label>
-                        <input type="url" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"/>
+                        <label for="linkurl">Link URL<?= in_array('linkurl',
+                                $opt['required'], true) ? '*' : '' ?></label>
+                        <input type="url" name="linkurl" id="linkurl" value="<?= $link['linkurl'] ?>"<?= in_array('linkurl',
+                            $opt['required'], true) ? ' required' : '' ?>/>
 
                         <?php if ($opt['allowdesc'] == 1) : ?>
                             <label for="linkdesc">Link Description</label>
@@ -134,8 +147,8 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
                         <input type="text" name="linktags" id="linktags" value="<?= $link['linktags'] ?>" />
 						<?php endif; ?>
 
-						<label for=" linkcat">Link Category</label>
-                        <select name="linkcat" id="linkcat">
+						<label for=" linkcat">Link Category*</label>
+                        <select name="linkcat" id="linkcat" required>
                             <?php
                             getAllCats('dropdown', '&nbsp;&nbsp;', $link['category']);
                             ?>
@@ -159,7 +172,10 @@ if (isset($_GET['linkid']) && is_numeric($_GET['linkid'])) {
 }
 if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     $error = null;
-    checkBots();
+
+    if (checkBots() === true) {
+        doError("No bots allowed.");
+    }
 
     $email = StringUtils::instance()->cleanNormalize($_POST['email'] ?? '');
 
@@ -168,7 +184,7 @@ if (isset($_GET['viewsites']) && $_SERVER['REQUEST_METHOD'] == "POST") {
     }
 
     if ($error === null) {
-        $findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `" . $dbpref . "links` WHERE LOWER(`owneremail`) = '" . $email . "'");
+        $findSites = $mysql->query("SELECT `id`, `linkname`, `linkurl` FROM `" . $dbpref . "links` WHERE TRIM(LOWER(`owneremail`)) = '" . $email . "'");
         if ($mysql->count($findSites) > 0) {
             $message = "Thank you for requesting a link update from " . $opt['dirname'] . "\r\n\r\n";
             $message .= "The following sites were found to be associated with your e-mail address; please click the link under each one to begin editing:\r\n";
