@@ -11,11 +11,25 @@ declare(strict_types = 1);
 
 namespace RobotessNet;
 
+use function addslashes;
+use function htmlentities;
+use function strip_tags;
 use function strtolower;
+use function trim;
+use const ENT_QUOTES;
 
 final class StringUtils
 {
     use Singleton;
+
+    public function cleanIfNotNull(?string $data, bool $leaveHtml = false): ?string
+    {
+        if ($data === null) {
+            return null;
+        }
+
+        return $this->clean($data, $leaveHtml);
+    }
 
     public function clean(?string $data, bool $leaveHtml = false): string
     {

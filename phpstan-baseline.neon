@@ -21,6 +21,11 @@ parameters:
 			path: public/ninjalinks/admin/header.php
 
 		-
+			message: "#^Variable \\$mysql might not be defined\\.$#"
+			count: 1
+			path: public/ninjalinks/admin/index.php
+
+		-
 			message: "#^Variable \\$opt might not be defined\\.$#"
 			count: 5
 			path: public/ninjalinks/admin/login.php
@@ -147,13 +152,13 @@ parameters:
 
 		-
 			message: "#^Variable \\$dbpref might not be defined\\.$#"
-			count: 2
-			path: public/ninjalinks/admin/update-to-robotess-fork-1.0.php
+			count: 1
+			path: public/ninjalinks/admin/update-to-robotess-fork-1.1.php
 
 		-
 			message: "#^Variable \\$mysql might not be defined\\.$#"
-			count: 4
-			path: public/ninjalinks/admin/update-to-robotess-fork-1.0.php
+			count: 1
+			path: public/ninjalinks/admin/update-to-robotess-fork-1.1.php
 
 		-
 			message: "#^Variable \\$dbpref might not be defined\\.$#"
@@ -207,31 +212,6 @@ parameters:
 
 		-
 			message: "#^Variable \\$opt might not be defined\\.$#"
-			count: 9
-			path: public/ninjalinks/updatelink.php
-
-		-
-			message: "#^Variable \\$ownername might not be defined\\.$#"
-			count: 2
-			path: public/ninjalinks/updatelink.php
-
-		-
-			message: "#^Variable \\$email might not be defined\\.$#"
-			count: 2
-			path: public/ninjalinks/updatelink.php
-
-		-
-			message: "#^Variable \\$linkname might not be defined\\.$#"
-			count: 3
-			path: public/ninjalinks/updatelink.php
-
-		-
-			message: "#^Variable \\$linkurl might not be defined\\.$#"
-			count: 2
-			path: public/ninjalinks/updatelink.php
-
-		-
-			message: "#^Variable \\$linkcat might not be defined\\.$#"
-			count: 1
+			count: 17
 			path: public/ninjalinks/updatelink.php
 

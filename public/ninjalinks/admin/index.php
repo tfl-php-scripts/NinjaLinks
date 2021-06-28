@@ -12,6 +12,9 @@ declare(strict_types=1);
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
+use RobotessNet\App;
+
+$isDashboard = true;
 include('header.php'); ?>
 
     <h1>Script version and server info</h1>
@@ -22,9 +25,13 @@ include('header.php'); ?>
            title="PHP Script NinjaLinks for PHP 7">project's page</a>.</p>
 
     <h2>Server info (useful for debugging and reporting issues)</h2>
-    <p class="script-version">NinjaLinks <?= RobotessNet\App::instance()->getVersion() ?><br/>
-        PHP: <?= PHP_VERSION ?></p>
-
+    <p class="script-version">NinjaLinks <?= RobotessNet\App::instance()->getVersion() ?>
+        <br/> PHP: <?= PHP_VERSION ?>
+        <br/> Showing MySQLi errors: <?= $mysql->isReportErrors() ? 'YES' : 'NO' ?> - to set to YES, replace
+    <pre>$mysql = new SQLConnection($dbhost, $dbuser, $dbpass, $dbname);</pre> in your config.php with
+    <pre>$mysql = SQLConnection::instance($dbhost, $dbuser, $dbpass, $dbname)->setReportErrors(true);</pre>
+    </p>
+    <hr/>
 <?php
 if (getStats("pending") > 0) {
     ?>
@@ -40,16 +47,13 @@ if (file_exists("../install.php")) {
 }
 
 ?>
-<?php
-$feedUrl = 'https://scripts.robotess.net/projects/ninja-links/atom.xml';
-?>
     <h1>Script Updates</h1>
     <script>
-        showRss(`<?= $feedUrl?>?date=<?=date('Y-m-d');?>`);
+        showRss(`<?= App::instance()->getRssUrl() ?>?date=<?=date('Y-m-d');?>`);
     </script>
 
     <div id="rss-feed-robotess-net">
-        Nothing here yet. Please check <a href="<?= $feedUrl; ?>" target="_blank">feed</a> manually.
+        Nothing here yet. Please check <a href="<?= App::instance()->getRssUrl() ?>" target="_blank">feed</a> manually.
     </div>
 
 <?php

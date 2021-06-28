@@ -40,7 +40,7 @@ $opt['opentarget'] = 0; // (1 = yes, 0 = no) target to new windows?
 $opt['nofollow'] = 0; // (1 = yes, 0 = no) add nofollow attribute to links, see http://www.jemjabella.co.uk/blog/google-pagerank-and-nofollow for nofollow info
 $opt['perpage'] = 20; // amount of links per page
 
-$opt['allowdesc'] = 1; // (1 = yes, 0 = no) allow site descriptions
+$opt['allowdesc'] = 0; // (1 = yes, 0 = no) allow site descriptions
 $opt['allowtags'] = 1; // (1 = yes, 0 = no) allow tags (in future, will enable search by tag, tag clouds etc)
 $opt['allowdupes'] = 0; // (1 = yes, 0 = no) allow duplicate links
 
@@ -55,4 +55,4 @@ $opt['cleanupdates'] = 1; // (1 = yes, 0 = no) remove HTML from updates in contr
 
 // DO NOT REMOVE NEXT LINES ....
 require_once('functions.php');
-$mysql = new SQLConnection($dbhost, $dbuser, $dbpass, $dbname);
+$mysql = SQLConnection::instance($dbhost, $dbuser, $dbpass, $dbname)->setReportErrors(true);

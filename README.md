@@ -30,7 +30,7 @@ If you are using NinjaLinks 1.1 (old version by Jem) or [Robotess Fork] 1.* (my 
    have all files from the folder uploaded.
 5. Open `config.sample.php`. Edit your database/scripts settings accordingly, and save it as `config.php` to overwrite your old
    file.
-6. Run `admin/update-to-robotess-fork-1.0.php`. After successful run, remove the file.
+6. Run `admin/update-to-robotess-fork-1.1.php`. After successful run, remove the file.
 
 That's it! Should you encounter any problems, please create an
 issue [here](https://gitlab.com/tfl-php-scripts/ninja-links/-/issues), and I will try and solve it if I can. You can

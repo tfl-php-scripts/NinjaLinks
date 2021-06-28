@@ -17,12 +17,17 @@ final class App
 
     public function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.0';
+        return '[Robotess Fork] v. 1.1';
     }
 
     public function getFormed(): string
     {
-        return 'NinjaLinks '.$this->getVersion().' ; http://scripts.robotess.net/projects/ninja-links';
+        return 'NinjaLinks '.$this->getVersion().'; http://scripts.robotess.net/projects/ninja-links';
+    }
+
+    public function getRssUrl(): string
+    {
+        return 'https://scripts.robotess.net/projects/ninja-links/atom.xml';
     }
 
     public function getLinkWithOriginal(): string
