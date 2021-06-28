@@ -17,7 +17,7 @@ final class App
 
     public function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.1 (Beta)';
+        return '[Robotess Fork] v. 1.1';
     }
 
     public function getFormed(): string

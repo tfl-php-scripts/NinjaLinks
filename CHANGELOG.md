@@ -10,3 +10,7 @@ v.1.0
 * Using * and 'required' for required fields; use my own clean function
 * Fixes for adding links when there's banned
 * Using MySQL native NOW()
+
+v.1.1
+* Fixes for cases when text description is not turned on
+* Fixing links table - adding default value for 'hits'
